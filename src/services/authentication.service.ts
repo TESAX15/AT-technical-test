@@ -1,6 +1,7 @@
 import { userRepository } from '../repositories/user.repository';
 import { hashingUtil } from '../utils/hashing.util';
 import { jwtAuthenticationUtil } from '../utils/jwt-authentication.util';
+import { userValidation } from '../input-validation/user.validation';
 import { ResponseContentDTO } from '../dto/response-content/response-content.dto';
 import { UserSignUpDTO } from '../dto/authentication/user-sign-up.dto';
 import { UserLogInDTO } from '../dto/authentication/user-log-in.dto';
@@ -12,6 +13,21 @@ import { UserLogInDTO } from '../dto/authentication/user-log-in.dto';
  */
 async function signUpUser(userSignUpData: UserSignUpDTO): Promise<ResponseContentDTO<void>> {
   try {
+    const validationErrors = userValidation.validateUserCredentials({
+      email: userSignUpData.email,
+      password: userSignUpData.password
+    });
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'The user could not be signed up due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
     const userAlreadyExists = await userRepository.findUserByEmail(userSignUpData.email);
 
     if (userAlreadyExists) {
@@ -55,6 +71,21 @@ async function signUpUser(userSignUpData: UserSignUpDTO): Promise<ResponseConten
  */
 async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDTO<string>> {
   try {
+    const validationErrors = userValidation.validateUserCredentials({
+      email: userLogInData.email,
+      password: userLogInData.password
+    });
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'The user could not be signed up due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
     const user = await userRepository.findUserByEmail(userLogInData.email);
 
     if (!user) {
@@ -62,6 +93,14 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
         statusCode: 404,
         statusMessage: 'Not Found',
         message: 'No user with the email provided was found'
+      };
+    }
+
+    if (user.blocked) {
+      return {
+        statusCode: 401,
+        statusMessage: 'Unauthorized',
+        message: 'The user is blocked'
       };
     }
 
