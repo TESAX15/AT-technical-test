@@ -1,5 +1,12 @@
-export interface ResponseContentDTO {
-  statusCode: 200 | 201 | 409 | 500;
-  statusMessage: 'OK' | 'Created' | 'Conflict' | 'Internal Server Error';
+export interface ResponseContentDTO<T> {
+  statusCode: 200 | 201 | 401 | 404 | 409 | 500;
+  statusMessage:
+    | 'OK'
+    | 'Created'
+    | 'Unauthorized'
+    | 'Not Found'
+    | 'Conflict'
+    | 'Internal Server Error';
   message: string;
+  data?: T;
 }
