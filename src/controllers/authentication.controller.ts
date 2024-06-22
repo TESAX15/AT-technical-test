@@ -1,10 +1,10 @@
 import express from 'express';
-import { UserSignUpDTO } from '../dto/authentication/user-sign-up.dto';
 import { authenticationService } from '../services/authentication.service';
+import { UserSignUpDTO } from '../dto/authentication/user-sign-up.dto';
 import { UserLogInDTO } from '../dto/authentication/user-log-in.dto';
 
 /**
- * Function that extracts the necessary data from the request body to sign up the user
+ * Function that extracts the necessary data from the request body to sign up the user and sends it on the response
  * @param req http request containing the necesary data to sign up the user
  * @param res http response to be sent with the results of this function
  */
@@ -17,7 +17,7 @@ async function signUp(req: express.Request, res: express.Response) {
 }
 
 /**
- * Function that extracts the necessary data from the request body to log in the user
+ * Function that extracts the necessary data from the request body to log in the user and sends the jwt token on the response
  * @param req http request containing the necesary data to log in the user
  * @param res http response to be sent with the results of this function
  */
@@ -48,7 +48,7 @@ async function logIn(req: express.Request, res: express.Response) {
 }
 
 /**
- * Function that extracts the necessary data from the request cookies to log out the user
+ * Function that extracts the necessary data from the request cookies to log out the user and send a response
  * @param req http request containing the necesary data to log out the user
  * @param res http response to be sent with the results of this function
  */
