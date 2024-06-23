@@ -5,6 +5,7 @@ import { Product } from '../models/product.model';
 import { ResponseContentDTO } from '../dto/response-content/response-content.dto';
 import { CreateProductDTO } from '../dto/product/create-product.dto';
 import { numericIdValidation } from '../input-validation/numeric-id.validation';
+import { UpdateProductDTO } from '../dto/product/update-product.dto';
 
 /**
  * Function that validates the business logic to get all products with result pagination and uses a repository to find them in the DB
@@ -150,10 +151,12 @@ async function createProduct(
       };
     }
 
-    const productAlreadyExists = await productRepository.findProductByName(createProductData.name);
+    const productNameAlreadyExists = await productRepository.findProductByName(
+      createProductData.name
+    );
 
     // Checking to see if a product with the provided name already exists
-    if (productAlreadyExists) {
+    if (productNameAlreadyExists) {
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
@@ -174,7 +177,7 @@ async function createProduct(
     } else {
       throw new Error('The product was not created successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
@@ -183,9 +186,150 @@ async function createProduct(
   }
 }
 
+/**
+ * Function that validates the business logic to update a product and uses a repository to update it in the DB
+ * @param updateProductData, the data sent from the controller to update a product
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function updateProduct(
+  id: number,
+  updateProductData: UpdateProductDTO
+): Promise<ResponseContentDTO<Product>> {
+  try {
+    let validationErrors = numericIdValidation.validateNumericId(id);
+
+    validationErrors = validationErrors.concat(
+      productValidation.validateProductAttributes({
+        name: updateProductData.name,
+        description: updateProductData.description,
+        price: updateProductData.price,
+        availableStock: updateProductData.availableStock
+      })
+    );
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'The product could not be updated due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
+    const productExists = await productRepository.findProductById(id);
+
+    // Checking to see if a product with the id provided exists
+    if (!productExists) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No product was found with the id provided'
+      };
+    }
+
+    const productNameAlreadyExists = await productRepository.findProductByName(
+      updateProductData.name
+    );
+
+    // Checking to see if a product with the provided name already exists and if that product is different from the one to update
+    if (productNameAlreadyExists && productExists.name != updateProductData.name) {
+      return {
+        statusCode: 409,
+        statusMessage: 'Conflict',
+        message: 'A product already exists with this name'
+      };
+    }
+
+    const updatedProduct = await productRepository.updateProductById(id, updateProductData);
+
+    // Checking to see if the product was updated
+    if (updatedProduct) {
+      return {
+        statusCode: 200,
+        statusMessage: 'OK',
+        message: 'The product has been updated successfully',
+        data: updatedProduct
+      };
+    } else {
+      throw new Error('The product was not updated successfully');
+    }
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The product could not be updated due to an unexpected error'
+    };
+  }
+}
+
+/**
+ * Function that validates the business logic to delete a product and uses a repository to delete it in the DB
+ * @param id, the id of the user to be deleted sent from the controller
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function deleteProduct(id: number): Promise<ResponseContentDTO<void>> {
+  try {
+    const validationErrors = numericIdValidation.validateNumericId(id);
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'No product could be found due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
+    const productExists = await productRepository.findProductById(id);
+
+    // Checking to see if a product with the id provided exists
+    if (!productExists) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No product was found with the id provided'
+      };
+    }
+
+    const productIsInOrders = await productRepository.productIsInOrders(id);
+
+    // If a product is present in orders in the DB then it can't be deleted because of the FK from order table to product table
+    if (productIsInOrders) {
+      return {
+        statusCode: 409,
+        statusMessage: 'Conflict',
+        message: 'The product could not be deleted becasuse it is present in orders'
+      };
+    }
+
+    const deletedProduct = await productRepository.deleteProductById(id);
+
+    // Checking to see if the product was deleted
+    if (deletedProduct) {
+      return {
+        statusCode: 200,
+        statusMessage: 'OK',
+        message: 'The product has been deleted successfully'
+      };
+    } else {
+      throw new Error('The product was not deleted successfully');
+    }
+  } catch (error) {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The product could not be deleted due to an unexpected error'
+    };
+  }
+}
+
 export const productService = {
   getAllProducts,
   getAvailableProducts,
   getProductById,
-  createProduct
+  createProduct,
+  updateProduct,
+  deleteProduct
 };

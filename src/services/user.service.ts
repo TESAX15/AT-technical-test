@@ -111,9 +111,9 @@ async function createUser(createUserData: CreateUserDTO): Promise<ResponseConten
       };
     }
 
-    const userAlreadyExists = await userRepository.findUserByEmail(createUserData.email);
+    const userEmailAlreadyExists = await userRepository.findUserByEmail(createUserData.email);
 
-    if (userAlreadyExists) {
+    if (userEmailAlreadyExists) {
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
@@ -189,10 +189,10 @@ async function updateUser(
       };
     }
 
-    const userAlreadyExists = await userRepository.findUserByEmail(updateUserData.email);
+    const userEmailAlreadyExists = await userRepository.findUserByEmail(updateUserData.email);
 
     // Checking to see if a user with the provided email already exists and if that email is different from the one to update
-    if (userAlreadyExists && userExists.email != updateUserData.email) {
+    if (userEmailAlreadyExists && userExists.email != updateUserData.email) {
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
@@ -220,7 +220,7 @@ async function updateUser(
     } else {
       throw new Error('The user was not updated successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
@@ -280,7 +280,7 @@ async function blockUser(id: number): Promise<ResponseContentDTO<void>> {
     } else {
       throw new Error('The user was not blocked successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
@@ -340,7 +340,7 @@ async function unblockUser(id: number): Promise<ResponseContentDTO<void>> {
     } else {
       throw new Error('The user was not unblocked successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
@@ -368,17 +368,6 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
       };
     }
 
-    const userHasMadeOrders = await userRepository.userHasMadeOrders(id);
-
-    // If a user has orders in the DB then it can't be deleted because of the FK from order table to user table
-    if (userHasMadeOrders) {
-      return {
-        statusCode: 409,
-        statusMessage: 'Conflict',
-        message: 'The user could not be deleted becasuse it has made orders before'
-      };
-    }
-
     const userExists = await userRepository.findUserById(id);
 
     // Checking to see if a user with the id provided exists
@@ -387,6 +376,17 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
         statusCode: 404,
         statusMessage: 'Not Found',
         message: 'No user was found with the id provided'
+      };
+    }
+
+    const userHasMadeOrders = await userRepository.userHasMadeOrders(id);
+
+    // If a user has orders in the DB then it can't be deleted because of the FK from order table to user table
+    if (userHasMadeOrders) {
+      return {
+        statusCode: 409,
+        statusMessage: 'Conflict',
+        message: 'The user could not be deleted becasuse it has made orders before'
       };
     }
 
@@ -402,7 +402,7 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
     } else {
       throw new Error('The user was not deleted successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',

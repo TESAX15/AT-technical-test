@@ -48,6 +48,49 @@ async function findProductByName(name: string): Promise<Product | null> {
   });
 }
 
+async function updateProductById(
+  id: number,
+  updateProductData: Omit<Product, 'id'>
+): Promise<Product> {
+  return await prisma.product.update({
+    where: {
+      id
+    },
+    data: updateProductData
+  });
+}
+
+async function productIsInOrders(id: number): Promise<boolean> {
+  const product = await prisma.product.findUnique({
+    where: {
+      id
+    },
+    include: {
+      orderProducts: true
+    }
+  });
+
+  if (product?.orderProducts.length) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+async function deleteProductById(id: number): Promise<boolean> {
+  const deletedProduct = await prisma.product.delete({
+    where: {
+      id
+    }
+  });
+
+  if (deletedProduct) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export const productRepository = {
   createProduct,
   countProducts,
@@ -55,5 +98,8 @@ export const productRepository = {
   findPaginatedProducts,
   findPaginatedAvailableProducts,
   findProductById,
-  findProductByName
+  findProductByName,
+  updateProductById,
+  productIsInOrders,
+  deleteProductById
 };

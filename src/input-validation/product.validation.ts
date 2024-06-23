@@ -24,10 +24,10 @@ function validateProductAttributes(product: Omit<Product, 'id'>): string[] {
       .min(0.01, { message: 'the price number provided must be greater than or equal to 0.01' }),
     availableStock: z
       .number({
-        required_error: 'a stock is required',
-        invalid_type_error: 'the stock provided is not a number'
+        required_error: 'a availableStock is required',
+        invalid_type_error: 'the availableStock provided is not a number'
       })
-      .min(1, { message: 'the stock number provided must be greater than or equal to 1' })
+      .min(1, { message: 'the availableStock number provided must be greater than or equal to 1' })
   });
   return parseValidationData(product, productSchema);
 }

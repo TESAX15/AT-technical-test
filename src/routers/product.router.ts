@@ -15,3 +15,13 @@ productRouter.post(
   authorizedUserMiddleware.isAuthorizedAdminUser,
   productController.createProduct
 );
+productRouter.put(
+  '/update:id',
+  authorizedUserMiddleware.isAuthorizedAdminUser,
+  productController.updateProductById
+);
+productRouter.delete(
+  '/delete:id',
+  authorizedUserMiddleware.isAuthorizedAdminUser,
+  productController.deleteProductById
+);
