@@ -1,7 +1,6 @@
-export interface User {
-  id: number;
+export interface UpdateUserDTO {
   email: string;
-  passwordHash: string;
+  password: string;
   userRole: 'Non-Admin' | 'Admin';
   isBlocked: boolean;
 }

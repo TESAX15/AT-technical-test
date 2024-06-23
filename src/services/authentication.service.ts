@@ -5,13 +5,16 @@ import { userValidation } from '../input-validation/user.validation';
 import { ResponseContentDTO } from '../dto/response-content/response-content.dto';
 import { UserSignUpDTO } from '../dto/authentication/user-sign-up.dto';
 import { UserLogInDTO } from '../dto/authentication/user-log-in.dto';
+import { User } from '../models/user.model';
 
 /**
- * Function that validates the business logic to sign up the user and uses a repository to create it
+ * Function that validates the business logic to sign up the user and uses a repository to create it in the DB
  * @param userSignUpData, the data sent from the controller to sign up the user
  * @returns responseContentDTO, the result from this function to be sent in the response
  */
-async function signUpUser(userSignUpData: UserSignUpDTO): Promise<ResponseContentDTO<void>> {
+async function signUpUser(
+  userSignUpData: UserSignUpDTO
+): Promise<ResponseContentDTO<Omit<User, 'passwordHash' | 'userRole' | 'isBlocked'>>> {
   try {
     const validationErrors = userValidation.validateUserCredentials({
       email: userSignUpData.email,
@@ -50,7 +53,8 @@ async function signUpUser(userSignUpData: UserSignUpDTO): Promise<ResponseConten
       return {
         statusCode: 201,
         statusMessage: 'Created',
-        message: 'The user has been signed up correctly'
+        message: 'The user has been signed up correctly',
+        data: { id: createdUser.id, email: createdUser.email }
       };
     } else {
       throw new Error('The user could not be signed up successfully');
@@ -96,7 +100,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
       };
     }
 
-    if (user.blocked) {
+    if (user.isBlocked) {
       return {
         statusCode: 401,
         statusMessage: 'Unauthorized',

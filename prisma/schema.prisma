@@ -12,7 +12,7 @@ model User {
   email        String   @unique
   passwordHash String
   userRole     String
-  blocked      Boolean  @default(false)
+  isBlocked    Boolean  @default(false)
   orders       Order[]
 }
 
