@@ -8,6 +8,12 @@ import { ResponseContentDTO } from '../dto/response-content/response-content.dto
 import { CreateUserDTO } from '../dto/user/create-user.dto';
 import { UpdateUserDTO } from '../dto/user/update-user.dto';
 
+/**
+ * Function that validates the business logic to get all user with result pagination and uses a repository to find them in the DB
+ * @param page, the number of the page to be seen
+ * @param limit, the number of items to be shown in a page
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
 async function getAllUsers(page: number, limit: number): Promise<ResponseContentDTO<User[]>> {
   try {
     const userCount = await userRepository.countUsers();
@@ -38,6 +44,11 @@ async function getAllUsers(page: number, limit: number): Promise<ResponseContent
   }
 }
 
+/**
+ * Function that validates the business logic to get a user by it's id and uses a repository to find them in the DB
+ * @param id, the id of the user to be found
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
 async function getUserById(id: number): Promise<ResponseContentDTO<User | null>> {
   try {
     const validationErrors = numericIdValidation.validateNumericId(id);
