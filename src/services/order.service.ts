@@ -1,11 +1,48 @@
 import { orderRepository } from '../repositories/order.repository';
 import { productRepository } from '../repositories/product.repository';
+import { paginationUtil } from '../utils/pagination.util';
 import { numericIdValidation } from '../input-validation/numeric-id.validation';
 import { orderValidation } from '../input-validation/order.validation';
 import { Order } from '../models/order.model';
 import { Product } from '../models/product.model';
 import { CreateOrderDTO } from '../dto/order/create-order.dto';
 import { ResponseContentDTO } from '../dto/response-content/response-content.dto';
+
+/**
+ * Function that validates the business logic to get all orders with result pagination and uses a repository to find them in the DB
+ * @param page, the number of the page to be seen
+ * @param limit, the number of items to be shown in a page
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function getAllOrders(page: number, limit: number): Promise<ResponseContentDTO<Order[]>> {
+  try {
+    const orderCount = await orderRepository.countOrders();
+    const paginationParams = paginationUtil.validatePaginationParams(page, limit);
+    // Calculates the pagination based on the validated parameters
+    const orderPages = paginationUtil.calculatePages(
+      orderCount,
+      paginationParams.page,
+      paginationParams.limit
+    );
+    const orders = await orderRepository.findPaginatedOrders(
+      paginationParams.skip,
+      paginationParams.limit
+    );
+    return {
+      statusCode: 200,
+      statusMessage: 'OK',
+      message: 'The orders have been found successfully',
+      data: orders,
+      paginationPages: orderPages
+    };
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The orders could not be found due to an unexpected error'
+    };
+  }
+}
 
 /**
  * Function that validates the business logic to create an order and uses a repository to create it in the DB
@@ -203,5 +240,6 @@ async function restoreProductsAvailableStock(
 }
 
 export const orderService = {
+  getAllOrders,
   createOrder
 };

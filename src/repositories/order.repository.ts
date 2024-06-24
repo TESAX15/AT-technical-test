@@ -29,6 +29,26 @@ async function createOrder(
   })) as Order;
 }
 
+async function countOrders(): Promise<number> {
+  return await prisma.order.count();
+}
+
+async function findPaginatedOrders(skip: number, take: number): Promise<Order[]> {
+  return (await prisma.order.findMany({
+    skip,
+    take,
+    include: {
+      orderProducts: {
+        include: {
+          product: true
+        }
+      }
+    }
+  })) as Order[];
+}
+
 export const orderRepository = {
-  createOrder
+  createOrder,
+  countOrders,
+  findPaginatedOrders
 };
