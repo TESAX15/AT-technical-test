@@ -20,3 +20,4 @@ orderRouter.get(
   orderController.getOrdersByUserId
 );
 orderRouter.post('/create', orderController.createOrder);
+orderRouter.patch('/cancel:id', orderController.cancelOrder);

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Order } from '../models/order.model';
+import { Order, OrderStatus } from '../models/order.model';
 import { OrderProduct } from '../models/order-product.model';
 
 const prisma = new PrismaClient();
@@ -85,11 +85,26 @@ async function findOrderById(id: number): Promise<Order | null> {
   })) as Order;
 }
 
+async function updateOrderStatus(id: number, orderStatus: OrderStatus): Promise<Order> {
+  return (await prisma.order.update({
+    data: { orderStatus: orderStatus },
+    include: {
+      orderProducts: {
+        include: {
+          product: true
+        }
+      }
+    },
+    where: { id: id }
+  })) as Order;
+}
+
 export const orderRepository = {
   createOrder,
   countOrders,
   countUserOrders,
   findPaginatedOrders,
   findPaginatedUserOrders,
-  findOrderById
+  findOrderById,
+  updateOrderStatus
 };

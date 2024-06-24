@@ -72,10 +72,24 @@ async function createOrder(req: AuthenticatedUserRequest, res: express.Response)
   return res.status(responseContent.statusCode).send(responseContent);
 }
 
+/**
+ * Function that extracts the necessary data from the request body to create an order and send it on the response
+ * @param req http request containing the necesary data to create an order and the current authenticated user
+ * @param res http response to be sent with the results of this function
+ */
+async function cancelOrder(req: AuthenticatedUserRequest, res: express.Response) {
+  const orderId = Number(req.params.id);
+  const authenticatedUser = req.authenticatedUser!;
+
+  const responseContent = await orderService.cancelOrder(orderId, authenticatedUser);
+  return res.status(responseContent.statusCode).send(responseContent);
+}
+
 export const orderController = {
   getAllOrders,
   getCurrentUserOrders,
   getOrderById,
   getOrdersByUserId,
-  createOrder
+  createOrder,
+  cancelOrder
 };

@@ -88,7 +88,7 @@ async function getCurrentUserOrders(
 }
 
 /**
- * Function that validates the business logic to get a order by it's id and uses a repository to find them in the DB
+ * Function that validates the business logic to get an order by it's id and uses a repository to find them in the DB
  * @param orderId, the id of the order to be found
  * @param authenticatedUser, the user that is making the request
  * @returns responseContentDTO, the result from this function to be sent in the response
@@ -112,27 +112,27 @@ async function getOrderById(
 
     const orderById = await orderRepository.findOrderById(orderId);
 
-    if (orderById) {
-      // If an order is found with the id provided, it only returns it if it was made by the current user or the current user is an admin
-      if (authenticatedUser.id === orderById.userId || authenticatedUser.userRole === 'Admin') {
-        return {
-          statusCode: 200,
-          statusMessage: 'OK',
-          message: 'The order has been found successfully',
-          data: orderById
-        };
-      } else {
-        return {
-          statusCode: 404,
-          statusMessage: 'Not Found',
-          message: 'No order made by the user was found with the id provided'
-        };
-      }
-    } else {
+    if (!orderById) {
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
         message: 'No order was found with the id provided'
+      };
+    }
+
+    // If an order is found with the id provided, it only returns it if it was made by the current user or the current user is an admin
+    if (authenticatedUser.id === orderById.userId || authenticatedUser.userRole === 'Admin') {
+      return {
+        statusCode: 200,
+        statusMessage: 'OK',
+        message: 'The order has been found successfully',
+        data: orderById
+      };
+    } else {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No order made by the user was found with the id provided'
       };
     }
   } catch {
@@ -360,6 +360,76 @@ async function createOrder(
 }
 
 /**
+ * Function that validates the business logic to cancel an order by it's id and uses a repository to update them in the DB
+ * @param orderId, the id of the order to be canceled
+ * @param authenticatedUser, the user that is making the request
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function cancelOrder(
+  orderId: number,
+  authenticatedUser: AuthenticatedUser
+): Promise<ResponseContentDTO<Order | null>> {
+  try {
+    const validationErrors = numericIdValidation.validateNumericId(orderId);
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'No order could be canceled due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
+    const orderToCancel = await orderRepository.findOrderById(orderId);
+
+    if (!orderToCancel) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No order was found with the id provided'
+      };
+    }
+
+    if (orderToCancel.orderStatus === 'Canceled') {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message: 'The order found with the id provided is already canceled'
+      };
+    }
+
+    // If an order is found with the id provided, it only cancels it if it was made by the current user or the current user is an admin
+    if (authenticatedUser.id === orderToCancel.userId || authenticatedUser.userRole === 'Admin') {
+      if (orderToCancel.orderStatus !== 'Delivered' && orderToCancel.orderStatus !== 'Shipped') {
+        const canceledOrder = await orderRepository.updateOrderStatus(orderId, 'Canceled');
+        return {
+          statusCode: 200,
+          statusMessage: 'OK',
+          message: 'The order has been canceled successfully',
+          data: canceledOrder
+        };
+      } else {
+        throw new Error('The order was not canceled successfully');
+      }
+    } else {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No order made by the user was found with the id provided'
+      };
+    }
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The order could not be canceled due to an unexpected error'
+    };
+  }
+}
+
+/**
  * Function to revert the updates made to products available stock in the order creation process, in case it fails
  * @param updatedProducts, an array containing the products that were updated before the error
  * @param productsToOrder, an array containing the original values of the products that were going to be ordered
@@ -394,5 +464,6 @@ export const orderService = {
   getCurrentUserOrders,
   getOrderById,
   getOrdersByUserId,
-  createOrder
+  createOrder,
+  cancelOrder
 };
