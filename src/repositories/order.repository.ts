@@ -72,10 +72,24 @@ async function findPaginatedCurrentUserOrders(
   })) as Order[];
 }
 
+async function findOrderById(id: number): Promise<Order | null> {
+  return (await prisma.order.findUnique({
+    include: {
+      orderProducts: {
+        include: {
+          product: true
+        }
+      }
+    },
+    where: { id: id }
+  })) as Order;
+}
+
 export const orderRepository = {
   createOrder,
   countOrders,
   countCurrentUserOrders,
   findPaginatedOrders,
-  findPaginatedCurrentUserOrders
+  findPaginatedCurrentUserOrders,
+  findOrderById
 };

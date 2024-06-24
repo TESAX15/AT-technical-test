@@ -1,11 +1,13 @@
 import { orderRepository } from '../repositories/order.repository';
 import { productRepository } from '../repositories/product.repository';
 import { paginationUtil } from '../utils/pagination.util';
+import { numericIdValidation } from '../input-validation/numeric-id.validation';
 import { orderValidation } from '../input-validation/order.validation';
 import { Order } from '../models/order.model';
 import { Product } from '../models/product.model';
 import { CreateOrderDTO } from '../dto/order/create-order.dto';
 import { ResponseContentDTO } from '../dto/response-content/response-content.dto';
+import { AuthenticatedUser } from '../interfaces/authentication/authenticated-user';
 
 /**
  * Function that validates the business logic to get all orders with result pagination and uses a repository to find them in the DB
@@ -81,6 +83,63 @@ async function getCurrentUserOrders(
       statusCode: 500,
       statusMessage: 'Internal Server Error',
       message: 'The orders could not be found due to an unexpected error'
+    };
+  }
+}
+
+/**
+ * Function that validates the business logic to get a order by it's id and uses a repository to find them in the DB
+ * @param orderId, the id of the order to be found
+ * @param authenticatedUser, the user that is making the request
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function getOrderById(
+  orderId: number,
+  authenticatedUser: AuthenticatedUser
+): Promise<ResponseContentDTO<Order | null>> {
+  try {
+    const validationErrors = numericIdValidation.validateNumericId(orderId);
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'No order could be found due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
+    const orderById = await orderRepository.findOrderById(orderId);
+
+    if (orderById) {
+      // If an order is found with the id provided, it only returns it if it was made by the current user or the current user is an admin
+      if (authenticatedUser.id === orderById.userId || authenticatedUser.userRole === 'Admin') {
+        return {
+          statusCode: 200,
+          statusMessage: 'OK',
+          message: 'The order has been found successfully',
+          data: orderById
+        };
+      } else {
+        return {
+          statusCode: 404,
+          statusMessage: 'Not Found',
+          message: 'No order made by the user was found with the id provided'
+        };
+      }
+    } else {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No order was found with the id provided'
+      };
+    }
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The order could not be found due to an unexpected error'
     };
   }
 }
@@ -280,5 +339,6 @@ async function restoreProductsAvailableStock(
 export const orderService = {
   getAllOrders,
   getCurrentUserOrders,
+  getOrderById,
   createOrder
 };

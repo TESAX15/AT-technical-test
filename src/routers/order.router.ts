@@ -13,4 +13,5 @@ orderRouter.get(
   orderController.getAllOrders
 );
 orderRouter.get('/by-current-user', orderController.getCurrentUserOrders);
+orderRouter.get('/by-id:id', orderController.getOrderById);
 orderRouter.post('/create', orderController.createOrder);
