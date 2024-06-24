@@ -392,18 +392,56 @@ async function cancelOrder(
       };
     }
 
-    if (orderToCancel.orderStatus === 'Canceled') {
+    if (
+      orderToCancel.orderStatus === 'Canceled' ||
+      orderToCancel.orderStatus === 'Delivered' ||
+      orderToCancel.orderStatus === 'Shipped'
+    ) {
+      let errorMessage: string = '';
+      switch (orderToCancel.orderStatus) {
+        case 'Canceled': {
+          errorMessage = 'The order found with the id provided is already canceled';
+          break;
+        }
+        case 'Delivered': {
+          errorMessage =
+            'The order found with the id provided can not be canceled because it was already delivered';
+          break;
+        }
+        case 'Shipped': {
+          errorMessage =
+            'The order found with the id provided can not be canceled because it was already shipped';
+          break;
+        }
+      }
+
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
-        message: 'The order found with the id provided is already canceled'
+        message: errorMessage
       };
     }
 
-    // If an order is found with the id provided, it only cancels it if it was made by the current user or the current user is an admin
+    // The order is only canceled it if it was made by the current user or the current user is an admin
     if (authenticatedUser.id === orderToCancel.userId || authenticatedUser.userRole === 'Admin') {
-      if (orderToCancel.orderStatus !== 'Delivered' && orderToCancel.orderStatus !== 'Shipped') {
-        const canceledOrder = await orderRepository.updateOrderStatus(orderId, 'Canceled');
+      const canceledOrder = await orderRepository.updateOrderStatus(orderId, 'Canceled');
+      if (canceledOrder) {
+        // We get the array of products that need to have their stock updated to include the stock that was in the canceled order
+        const productsToRestore = canceledOrder.orderProducts.map((element) => {
+          return element.product;
+        });
+
+        // We get the array of the products to be updated adding the stock that was in the canceled order to get their new stock
+        const productsNewStock = canceledOrder.orderProducts.map((element) => {
+          return {
+            ...element.product,
+            availableStock: element.product.availableStock + element.quantity
+          };
+        });
+
+        // Updating the products available stock to now include the canceled orders stock
+        await restoreProductsAvailableStock(productsToRestore, productsNewStock, '');
+
         return {
           statusCode: 200,
           statusMessage: 'OK',
@@ -430,8 +468,8 @@ async function cancelOrder(
 }
 
 /**
- * Function to revert the updates made to products available stock in the order creation process, in case it fails
- * @param updatedProducts, an array containing the products that were updated before the error
+ * Function to revert the updates made to products available stock in the order creation process, in case it fails or is canceled
+ * @param updatedProducts, an array containing the products that were updated before the error or cancelation
  * @param productsToOrder, an array containing the original values of the products that were going to be ordered
  * @param errorMessageStart, the start of the error message that will say were the order creation process went wrong
  * @returns errorMessage, the error message to be included in the error thrown from where the function is called
