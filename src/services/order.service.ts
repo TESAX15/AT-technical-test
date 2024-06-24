@@ -1,7 +1,6 @@
 import { orderRepository } from '../repositories/order.repository';
 import { productRepository } from '../repositories/product.repository';
 import { paginationUtil } from '../utils/pagination.util';
-import { numericIdValidation } from '../input-validation/numeric-id.validation';
 import { orderValidation } from '../input-validation/order.validation';
 import { Order } from '../models/order.model';
 import { Product } from '../models/product.model';
@@ -45,6 +44,48 @@ async function getAllOrders(page: number, limit: number): Promise<ResponseConten
 }
 
 /**
+ * Function that validates the business logic to get all orders with result pagination and uses a repository to find them in the DB
+ * @param page, the number of the page to be seen
+ * @param limit, the number of items to be shown in a page
+ * @param userId, the id of the user that is currently logged in, that has been validated by the authenticated user middleware
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function getCurrentUserOrders(
+  page: number,
+  limit: number,
+  userId: number
+): Promise<ResponseContentDTO<Order[]>> {
+  try {
+    const orderCount = await orderRepository.countCurrentUserOrders(userId);
+    const paginationParams = paginationUtil.validatePaginationParams(page, limit);
+    // Calculates the pagination based on the validated parameters
+    const orderPages = paginationUtil.calculatePages(
+      orderCount,
+      paginationParams.page,
+      paginationParams.limit
+    );
+    const orders = await orderRepository.findPaginatedCurrentUserOrders(
+      paginationParams.skip,
+      paginationParams.limit,
+      userId
+    );
+    return {
+      statusCode: 200,
+      statusMessage: 'OK',
+      message: 'Your orders have been found successfully',
+      data: orders,
+      paginationPages: orderPages
+    };
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The orders could not be found due to an unexpected error'
+    };
+  }
+}
+
+/**
  * Function that validates the business logic to create an order and uses a repository to create it in the DB
  * @param createOrderData, the data sent from the controller to create an order
  * @returns responseContentDTO, the result from this function to be sent in the response
@@ -53,13 +94,10 @@ async function createOrder(
   createOrderData: CreateOrderDTO
 ): Promise<ResponseContentDTO<Order | Product[]>> {
   try {
-    let validationErrors = numericIdValidation.validateNumericId(createOrderData.userId);
-
-    validationErrors = validationErrors.concat(
-      orderValidation.validateOrderProducts({
-        orderProducts: createOrderData.orderProducts
-      })
-    );
+    // Only the order products are validated since the current user id es already validated by the authentication middleware
+    const validationErrors = orderValidation.validateOrderProducts({
+      orderProducts: createOrderData.orderProducts
+    });
 
     if (validationErrors.length > 0) {
       return {
@@ -241,5 +279,6 @@ async function restoreProductsAvailableStock(
 
 export const orderService = {
   getAllOrders,
+  getCurrentUserOrders,
   createOrder
 };

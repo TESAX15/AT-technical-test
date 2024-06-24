@@ -12,4 +12,5 @@ orderRouter.get(
   authorizedUserMiddleware.isAuthorizedAdminUser,
   orderController.getAllOrders
 );
+orderRouter.get('/by-current-user', orderController.getCurrentUserOrders);
 orderRouter.post('/create', orderController.createOrder);
