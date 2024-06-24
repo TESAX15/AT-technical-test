@@ -44,6 +44,20 @@ async function getOrderById(req: AuthenticatedUserRequest, res: express.Response
 }
 
 /**
+ * Function that extracts the necessary data from the request query to get an order by its id and send it on the response
+ * @param req http request containing the necesary data to get an order by its id and the current authenticated user
+ * @param res http response to be sent with the results of this function
+ */
+async function getOrdersByUserId(req: AuthenticatedUserRequest, res: express.Response) {
+  const page = Number(req.query.page);
+  const limit = Number(req.query.limit);
+  const userId = Number(req.params.id);
+
+  const responseContent = await orderService.getOrdersByUserId(page, limit, userId);
+  return res.status(responseContent.statusCode).send(responseContent);
+}
+
+/**
  * Function that extracts the necessary data from the request body to create an order and send it on the response
  * @param req http request containing the necesary data to create an order and the current authenticated user
  * @param res http response to be sent with the results of this function
@@ -62,5 +76,6 @@ export const orderController = {
   getAllOrders,
   getCurrentUserOrders,
   getOrderById,
+  getOrdersByUserId,
   createOrder
 };

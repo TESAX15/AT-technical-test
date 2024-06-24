@@ -46,7 +46,7 @@ async function getAllOrders(page: number, limit: number): Promise<ResponseConten
 }
 
 /**
- * Function that validates the business logic to get all orders with result pagination and uses a repository to find them in the DB
+ * Function that validates the business logic to get all orders made by the user that is currently logged in, with result pagination, and uses a repository to find them in the DB
  * @param page, the number of the page to be seen
  * @param limit, the number of items to be shown in a page
  * @param userId, the id of the user that is currently logged in, that has been validated by the authenticated user middleware
@@ -58,7 +58,7 @@ async function getCurrentUserOrders(
   userId: number
 ): Promise<ResponseContentDTO<Order[]>> {
   try {
-    const orderCount = await orderRepository.countCurrentUserOrders(userId);
+    const orderCount = await orderRepository.countUserOrders(userId);
     const paginationParams = paginationUtil.validatePaginationParams(page, limit);
     // Calculates the pagination based on the validated parameters
     const orderPages = paginationUtil.calculatePages(
@@ -66,7 +66,7 @@ async function getCurrentUserOrders(
       paginationParams.page,
       paginationParams.limit
     );
-    const orders = await orderRepository.findPaginatedCurrentUserOrders(
+    const orders = await orderRepository.findPaginatedUserOrders(
       paginationParams.skip,
       paginationParams.limit,
       userId
@@ -140,6 +140,59 @@ async function getOrderById(
       statusCode: 500,
       statusMessage: 'Internal Server Error',
       message: 'The order could not be found due to an unexpected error'
+    };
+  }
+}
+
+/**
+ * Function that validates the business logic to get all orders made by a user, with result pagination, and uses a repository to find them in the DB
+ * @param page, the number of the page to be seen
+ * @param limit, the number of items to be shown in a page
+ * @param userId, the id of the user that made the orders to find
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function getOrdersByUserId(
+  page: number,
+  limit: number,
+  userId: number
+): Promise<ResponseContentDTO<Order[]>> {
+  try {
+    const validationErrors = numericIdValidation.validateNumericId(userId);
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'No orders could be found due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+    const orderCount = await orderRepository.countUserOrders(userId);
+    const paginationParams = paginationUtil.validatePaginationParams(page, limit);
+    // Calculates the pagination based on the validated parameters
+    const orderPages = paginationUtil.calculatePages(
+      orderCount,
+      paginationParams.page,
+      paginationParams.limit
+    );
+    const orders = await orderRepository.findPaginatedUserOrders(
+      paginationParams.skip,
+      paginationParams.limit,
+      userId
+    );
+    return {
+      statusCode: 200,
+      statusMessage: 'OK',
+      message: 'The orders made by the user have been found successfully',
+      data: orders,
+      paginationPages: orderPages
+    };
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The orders made by the user could not be found due to an unexpected error'
     };
   }
 }
@@ -340,5 +393,6 @@ export const orderService = {
   getAllOrders,
   getCurrentUserOrders,
   getOrderById,
+  getOrdersByUserId,
   createOrder
 };

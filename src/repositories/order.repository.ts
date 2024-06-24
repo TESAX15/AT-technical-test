@@ -33,7 +33,7 @@ async function countOrders(): Promise<number> {
   return await prisma.order.count();
 }
 
-async function countCurrentUserOrders(userId: number): Promise<number> {
+async function countUserOrders(userId: number): Promise<number> {
   return await prisma.order.count({ where: { userId: userId } });
 }
 
@@ -51,7 +51,7 @@ async function findPaginatedOrders(skip: number, take: number): Promise<Order[]>
   })) as Order[];
 }
 
-async function findPaginatedCurrentUserOrders(
+async function findPaginatedUserOrders(
   skip: number,
   take: number,
   userId: number
@@ -88,8 +88,8 @@ async function findOrderById(id: number): Promise<Order | null> {
 export const orderRepository = {
   createOrder,
   countOrders,
-  countCurrentUserOrders,
+  countUserOrders,
   findPaginatedOrders,
-  findPaginatedCurrentUserOrders,
+  findPaginatedUserOrders,
   findOrderById
 };
