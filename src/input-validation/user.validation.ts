@@ -62,7 +62,7 @@ function validateUserUpdateData(
         invalid_type_error: 'the password provided is not a string'
       })
       .min(8, { message: 'the password should be at least 8 characters long' }),
-    userRole: z.enum(['Non-Admin', 'Admin'], {
+    userRole: z.enum(['NonAdmin', 'Admin'], {
       required_error: 'a user role is required',
       invalid_type_error: 'the user role provided is invalid'
     }),

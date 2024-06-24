@@ -11,7 +11,7 @@ import { CreateOrderDTO } from '../dto/order/create-order.dto';
 async function createOrder(req: AuthenticatedUserRequest, res: express.Response) {
   const createOrderData: CreateOrderDTO = {
     userId: req.authenticatedUser!.id,
-    orderProducts: req.body
+    orderProducts: req.body.orderProducts
   };
 
   const responseContent = await orderService.createOrder(createOrderData);

@@ -18,9 +18,11 @@ async function createOrder(
   try {
     let validationErrors = numericIdValidation.validateNumericId(createOrderData.userId);
 
-    validationErrors = orderValidation.validateOrderProducts({
-      orderProducts: createOrderData.orderProducts
-    });
+    validationErrors = validationErrors.concat(
+      orderValidation.validateOrderProducts({
+        orderProducts: createOrderData.orderProducts
+      })
+    );
 
     if (validationErrors.length > 0) {
       return {
@@ -28,7 +30,7 @@ async function createOrder(
         statusMessage: 'Bad Request',
         message:
           'No order could be created due to the following validation errors: ' +
-          validationErrors.join(', ')
+          [...new Set(validationErrors)].join(', ')
       };
     }
 
@@ -40,7 +42,7 @@ async function createOrder(
       return element.productId == createOrderData.orderProducts[index - 1]?.productId;
     });
 
-    // If an order product is includec more than once in the same order we return a 400 error with the corresponding products ids
+    // If an order product is included more than once in the same order we return a 400 error with the corresponding products ids
     if (duplicateOrderProducts.length > 0) {
       const duplicateOrderProductsIds = duplicateOrderProducts.map((element) => {
         return element.productId;
@@ -134,19 +136,24 @@ async function createOrder(
       );
     }
 
-    const createdOrder = await orderRepository.createOrder(
-      { userId: createOrderData.userId, orderStatus: 'Pending', lastUpdateDate: new Date() },
-      createOrderData.orderProducts
-    );
+    let createdOrder: Order;
 
-    if (createdOrder) {
-      return {
-        statusCode: 201,
-        statusMessage: 'Created',
-        message: 'The order has been created successfully',
-        data: createdOrder
-      };
-    } else {
+    try {
+      createdOrder = await orderRepository.createOrder(
+        { userId: createOrderData.userId, orderStatus: 'Pending', lastUpdateDate: new Date() },
+        createOrderData.orderProducts
+      );
+      if (createdOrder) {
+        return {
+          statusCode: 201,
+          statusMessage: 'Created',
+          message: 'The order has been created successfully',
+          data: createdOrder
+        };
+      } else {
+        throw new Error('Something went wrong in the order creation');
+      }
+    } catch {
       // Reverts the changes made to products available stock and generates the error message to be sent
       throw Error(
         await restoreProductsAvailableStock(
