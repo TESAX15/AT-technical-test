@@ -21,3 +21,8 @@ orderRouter.get(
 );
 orderRouter.post('/create', orderController.createOrder);
 orderRouter.patch('/cancel:id', orderController.cancelOrder);
+orderRouter.delete(
+  '/delete:id',
+  authorizedUserMiddleware.isAuthorizedAdminUser,
+  orderController.deleteOrderById
+);

@@ -468,6 +468,68 @@ async function cancelOrder(
 }
 
 /**
+ * Function that validates the business logic to delete an order by it's id and uses a repository to delete them in the DB
+ * @param orderId, the id of the order to be deleted
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Order | null>> {
+  try {
+    const validationErrors = numericIdValidation.validateNumericId(orderId);
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'No order could be canceled due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
+    const orderToDelete = await orderRepository.findOrderById(orderId);
+
+    if (!orderToDelete) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No order was found with the id provided'
+      };
+    }
+
+    // Checking to see if the order to delete is still ongoing, only delivered or canceled orders can be deleted
+    if (
+      orderToDelete.orderStatus === 'Pending' ||
+      orderToDelete.orderStatus === 'Processing' ||
+      orderToDelete.orderStatus === 'Shipped'
+    ) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'The order can not be deleted because it is still ongoing, only delivered or canceled orders can be deleted'
+      };
+    }
+
+    const deletedOrder = await orderRepository.deleteOrderById(orderId);
+    if (deletedOrder) {
+      return {
+        statusCode: 200,
+        statusMessage: 'OK',
+        message: 'The order has been deleted successfully'
+      };
+    } else {
+      throw new Error('The order was not deleted successfully');
+    }
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The order could not be deleted due to an unexpected error'
+    };
+  }
+}
+
+/**
  * Function to revert the updates made to products available stock in the order creation process, in case it fails or is canceled
  * @param updatedProducts, an array containing the products that were updated before the error or cancelation
  * @param productsToOrder, an array containing the original values of the products that were going to be ordered
@@ -503,5 +565,6 @@ export const orderService = {
   getOrderById,
   getOrdersByUserId,
   createOrder,
-  cancelOrder
+  cancelOrder,
+  deleteOrderById
 };

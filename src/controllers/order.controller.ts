@@ -17,7 +17,7 @@ async function getAllOrders(req: AuthenticatedUserRequest, res: express.Response
 }
 
 /**
- * Function that extracts the necessary data from the request query to get all the orders made by the current user and send them on the response
+ * Function that extracts the necessary data from the request query and body to get all the orders made by the current user and send them on the response
  * @param req http request containing the necesary data to get all the orders made by the current user and the current authenticated user, contains the pagination parameters
  * @param res http response to be sent with the results of this function
  */
@@ -31,7 +31,7 @@ async function getCurrentUserOrders(req: AuthenticatedUserRequest, res: express.
 }
 
 /**
- * Function that extracts the necessary data from the request query to get an order by its id and send it on the response
+ * Function that extracts the necessary data from the request params and body to get an order by its id and send it on the response
  * @param req http request containing the necesary data to get an order by its id and the current authenticated user
  * @param res http response to be sent with the results of this function
  */
@@ -44,7 +44,7 @@ async function getOrderById(req: AuthenticatedUserRequest, res: express.Response
 }
 
 /**
- * Function that extracts the necessary data from the request query to get an order by its id and send it on the response
+ * Function that extracts the necessary data from the request query and params to get an order by its id and send it on the response
  * @param req http request containing the necesary data to get an order by its id and the current authenticated user
  * @param res http response to be sent with the results of this function
  */
@@ -73,7 +73,7 @@ async function createOrder(req: AuthenticatedUserRequest, res: express.Response)
 }
 
 /**
- * Function that extracts the necessary data from the request body to create an order and send it on the response
+ * Function that extracts the necessary data from the request params and body to create an order and send it on the response
  * @param req http request containing the necesary data to create an order and the current authenticated user
  * @param res http response to be sent with the results of this function
  */
@@ -85,11 +85,24 @@ async function cancelOrder(req: AuthenticatedUserRequest, res: express.Response)
   return res.status(responseContent.statusCode).send(responseContent);
 }
 
+/**
+ * Function that extracts the necessary data from the request params to get an order by its id and send it on the response
+ * @param req http request containing the necesary data to get an order by its id and the current authenticated user
+ * @param res http response to be sent with the results of this function
+ */
+async function deleteOrderById(req: AuthenticatedUserRequest, res: express.Response) {
+  const orderId = Number(req.params.id);
+
+  const responseContent = await orderService.deleteOrderById(orderId);
+  return res.status(responseContent.statusCode).send(responseContent);
+}
+
 export const orderController = {
   getAllOrders,
   getCurrentUserOrders,
   getOrderById,
   getOrdersByUserId,
   createOrder,
-  cancelOrder
+  cancelOrder,
+  deleteOrderById
 };

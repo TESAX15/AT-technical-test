@@ -87,7 +87,7 @@ async function findOrderById(id: number): Promise<Order | null> {
 
 async function updateOrderStatus(id: number, orderStatus: OrderStatus): Promise<Order> {
   return (await prisma.order.update({
-    data: { orderStatus: orderStatus },
+    data: { orderStatus: orderStatus, lastUpdateDate: new Date() },
     include: {
       orderProducts: {
         include: {
@@ -99,6 +99,19 @@ async function updateOrderStatus(id: number, orderStatus: OrderStatus): Promise<
   })) as Order;
 }
 
+async function deleteOrderById(id: number): Promise<boolean> {
+  const order = await prisma.order.delete({
+    where: {
+      id
+    }
+  });
+  if (order) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export const orderRepository = {
   createOrder,
   countOrders,
@@ -106,5 +119,6 @@ export const orderRepository = {
   findPaginatedOrders,
   findPaginatedUserOrders,
   findOrderById,
-  updateOrderStatus
+  updateOrderStatus,
+  deleteOrderById
 };
