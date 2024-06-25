@@ -11,35 +11,48 @@ model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
   passwordHash String
-  userRole     String
+  userRole     userRole @default(NonAdmin)
   isBlocked    Boolean  @default(false)
   orders       Order[]
 }
 
+enum userRole {
+  NonAdmin
+  Admin
+}
+
 model Order {
-  id             Int           @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   userId         Int
-  user           User          @relation(fields: [userId], references: [id])
-  orderStatus    String
-  creationDate   DateTime      @default(now())
-  lastUpdateDate DateTime
+  user           User           @relation(fields: [userId], references: [id])
+  orderStatus    OrderStatus
+  creationDate   DateTime       @default(now())
+  lastUpdateDate DateTime       
   orderProducts  OrderProduct[]
 }
 
+enum OrderStatus {
+  Pending
+  Processing
+  Shipped
+  Delivered
+  Canceled
+}
+
 model Product {
-  id          Int            @id @default(autoincrement())
-  name        String         @unique
-  description String
-  price       Float
-  availableStock       Int
-  orderProducts OrderProduct[]
+  id             Int            @id @default(autoincrement())
+  name           String         @unique
+  description    String
+  price          Float
+  availableStock Int
+  orderProducts  OrderProduct[]
 }
 
 model OrderProduct {
   orderId   Int
   productId Int
   quantity  Int
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id])
 
   @@id([orderId, productId])

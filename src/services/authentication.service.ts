@@ -46,7 +46,7 @@ async function signUpUser(
     const createdUser = await userRepository.createUser({
       email: userSignUpData.email,
       passwordHash: passwordHash,
-      userRole: 'Non-Admin'
+      userRole: 'NonAdmin'
     });
 
     if (createdUser) {

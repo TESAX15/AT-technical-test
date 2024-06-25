@@ -48,6 +48,17 @@ async function findProductByName(name: string): Promise<Product | null> {
   });
 }
 
+async function findManyProductsByIds(ids: number[]): Promise<Product[]> {
+  return await prisma.product.findMany({
+    where: {
+      id: { in: ids }
+    },
+    orderBy: {
+      id: 'asc'
+    }
+  });
+}
+
 async function updateProductById(
   id: number,
   updateProductData: Omit<Product, 'id'>
@@ -57,6 +68,20 @@ async function updateProductById(
       id
     },
     data: updateProductData
+  });
+}
+
+async function updateProductAvailableStockById(
+  id: number,
+  availableStock: number
+): Promise<Product> {
+  return await prisma.product.update({
+    where: {
+      id
+    },
+    data: {
+      availableStock
+    }
   });
 }
 
@@ -99,7 +124,9 @@ export const productRepository = {
   findPaginatedAvailableProducts,
   findProductById,
   findProductByName,
+  findManyProductsByIds,
   updateProductById,
+  updateProductAvailableStockById,
   productIsInOrders,
   deleteProductById
 };
