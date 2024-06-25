@@ -21,6 +21,11 @@ orderRouter.get(
 );
 orderRouter.post('/create', orderController.createOrder);
 orderRouter.patch('/cancel:id', orderController.cancelOrder);
+orderRouter.patch(
+  '/advance-status:id',
+  authorizedUserMiddleware.isAuthorizedAdminUser,
+  orderController.advanceOrderStatus
+);
 orderRouter.delete(
   '/delete:id',
   authorizedUserMiddleware.isAuthorizedAdminUser,

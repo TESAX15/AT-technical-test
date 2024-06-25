@@ -86,8 +86,20 @@ async function cancelOrder(req: AuthenticatedUserRequest, res: express.Response)
 }
 
 /**
- * Function that extracts the necessary data from the request params to get an order by its id and send it on the response
- * @param req http request containing the necesary data to get an order by its id and the current authenticated user
+ * Function that extracts the necessary data from the request params to advance the status of an order by its id and send it on the response
+ * @param req http request containing the necesary data to advance the status of an order by its id and the current authenticated user
+ * @param res http response to be sent with the results of this function
+ */
+async function advanceOrderStatus(req: AuthenticatedUserRequest, res: express.Response) {
+  const orderId = Number(req.params.id);
+
+  const responseContent = await orderService.advanceOrderStatusById(orderId);
+  return res.status(responseContent.statusCode).send(responseContent);
+}
+
+/**
+ * Function that extracts the necessary data from the request params to delete an order by its id and send it on the response
+ * @param req http request containing the necesary data to delete an order by its id and the current authenticated user
  * @param res http response to be sent with the results of this function
  */
 async function deleteOrderById(req: AuthenticatedUserRequest, res: express.Response) {
@@ -104,5 +116,6 @@ export const orderController = {
   getOrdersByUserId,
   createOrder,
   cancelOrder,
+  advanceOrderStatus,
   deleteOrderById
 };

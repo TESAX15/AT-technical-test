@@ -3,7 +3,7 @@ import { productRepository } from '../repositories/product.repository';
 import { paginationUtil } from '../utils/pagination.util';
 import { numericIdValidation } from '../input-validation/numeric-id.validation';
 import { orderValidation } from '../input-validation/order.validation';
-import { Order } from '../models/order.model';
+import { Order, OrderStatus } from '../models/order.model';
 import { Product } from '../models/product.model';
 import { CreateOrderDTO } from '../dto/order/create-order.dto';
 import { ResponseContentDTO } from '../dto/response-content/response-content.dto';
@@ -405,12 +405,12 @@ async function cancelOrder(
         }
         case 'Delivered': {
           errorMessage =
-            'The order found with the id provided can not be canceled because it was already delivered';
+            'The order found with the id provided cannot be canceled because it was already delivered';
           break;
         }
         case 'Shipped': {
           errorMessage =
-            'The order found with the id provided can not be canceled because it was already shipped';
+            'The order found with the id provided cannot be canceled because it was already shipped';
           break;
         }
       }
@@ -468,6 +468,77 @@ async function cancelOrder(
 }
 
 /**
+ * Function that validates the business logic to advance the status of an order by it's id and uses a repository to update it in the DB
+ * @param orderId, the id of the order whose status is going to be advanced
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
+async function advanceOrderStatusById(orderId: number): Promise<ResponseContentDTO<Order | null>> {
+  try {
+    const validationErrors = numericIdValidation.validateNumericId(orderId);
+
+    if (validationErrors.length > 0) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'The order status could not be advanced due to the following validation errors: ' +
+          validationErrors.join(', ')
+      };
+    }
+
+    const orderToAdvanceStatus = await orderRepository.findOrderById(orderId);
+
+    if (!orderToAdvanceStatus) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        message: 'No order was found with the id provided'
+      };
+    }
+
+    // Checking to see if the order is completed, only orders with the pending, processing or shipped status can be advanced to the next status
+    if (
+      orderToAdvanceStatus.orderStatus === 'Delivered' ||
+      orderToAdvanceStatus.orderStatus === 'Canceled'
+    ) {
+      return {
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message:
+          'The order status cannot be advanced because the order is completed, only orders with the pending, processing or shipped status can be advanced'
+      };
+    }
+
+    // Posible next order status
+    const orderStatus = ['Pending', 'Processing', 'Shipped', 'Delivered'];
+
+    // Getting the current order status index
+    const currentOrderStatusIndex = orderStatus.indexOf(orderToAdvanceStatus.orderStatus as string);
+
+    // Getting the next order status
+    const nextOrderStatus = orderStatus[currentOrderStatusIndex + 1] as OrderStatus;
+
+    const advancedStatusOrder = await orderRepository.updateOrderStatus(orderId, nextOrderStatus);
+    if (advancedStatusOrder) {
+      return {
+        statusCode: 200,
+        statusMessage: 'OK',
+        message: 'The order status has been advanced successfully',
+        data: advancedStatusOrder
+      };
+    } else {
+      throw new Error('The order status was not advanced successfully');
+    }
+  } catch {
+    return {
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'The order status could not be advanced due to an unexpected error'
+    };
+  }
+}
+
+/**
  * Function that validates the business logic to delete an order by it's id and uses a repository to delete them in the DB
  * @param orderId, the id of the order to be deleted
  * @returns responseContentDTO, the result from this function to be sent in the response
@@ -481,7 +552,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
         statusCode: 400,
         statusMessage: 'Bad Request',
         message:
-          'No order could be canceled due to the following validation errors: ' +
+          'No order could be deleted due to the following validation errors: ' +
           validationErrors.join(', ')
       };
     }
@@ -506,7 +577,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
         statusCode: 400,
         statusMessage: 'Bad Request',
         message:
-          'The order can not be deleted because it is still ongoing, only delivered or canceled orders can be deleted'
+          'The order cannot be deleted because it is still ongoing, only delivered or canceled orders can be deleted'
       };
     }
 
@@ -566,5 +637,6 @@ export const orderService = {
   getOrdersByUserId,
   createOrder,
   cancelOrder,
+  advanceOrderStatusById,
   deleteOrderById
 };
