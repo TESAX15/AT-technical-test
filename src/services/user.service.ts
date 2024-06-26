@@ -377,9 +377,10 @@ async function unblockUser(id: number): Promise<ResponseContentDTO<void>> {
 /**
  * Function that validates the business logic to delete a user and uses a repository to delete it in the DB
  * @param id, the id of the user to be deleted sent from the controller
+ *  * @param userId, the id of the user that is currently logged in, that has been validated by the authenticated user middleware
  * @returns responseContentDTO, the result from this function to be sent in the response
  */
-async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
+async function deleteUser(id: number, userId: number): Promise<ResponseContentDTO<void>> {
   try {
     const validationErrors = numericIdValidation.validateNumericId(id);
 
@@ -391,6 +392,15 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
         message:
           'The user could not be deleted due to the following validation errors: ' +
           validationErrors.join(', ')
+      };
+    }
+
+    if (id === userId) {
+      return {
+        statusCode: 409,
+        statusMessage: 'Conflict',
+        isErrorMessage: true,
+        message: 'The user could not be deleted becasuse a user cannot delete itself'
       };
     }
 
