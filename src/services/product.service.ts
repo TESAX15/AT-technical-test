@@ -30,6 +30,7 @@ async function getAllProducts(page: number, limit: number): Promise<ResponseCont
     return {
       statusCode: 200,
       statusMessage: 'OK',
+      isErrorMessage: false,
       message: 'The products have been found successfully',
       data: products,
       paginationPages: productPages
@@ -38,6 +39,7 @@ async function getAllProducts(page: number, limit: number): Promise<ResponseCont
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The products could not be found due to an unexpected error'
     };
   }
@@ -69,6 +71,7 @@ async function getAvailableProducts(
     return {
       statusCode: 200,
       statusMessage: 'OK',
+      isErrorMessage: false,
       message: 'The available products have been found successfully',
       data: availableProducts,
       paginationPages: availableProductPages
@@ -77,6 +80,7 @@ async function getAvailableProducts(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The products could not be found due to an unexpected error'
     };
   }
@@ -95,6 +99,7 @@ async function getProductById(id: number): Promise<ResponseContentDTO<Product>> 
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No product could be found due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -107,6 +112,7 @@ async function getProductById(id: number): Promise<ResponseContentDTO<Product>> 
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The product has been found successfully',
         data: productById
       };
@@ -114,12 +120,14 @@ async function getProductById(id: number): Promise<ResponseContentDTO<Product>> 
     return {
       statusCode: 404,
       statusMessage: 'Not Found',
+      isErrorMessage: true,
       message: 'No product was found with the id provided'
     };
   } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The product could not be found due to an unexpected error'
     };
   }
@@ -145,6 +153,7 @@ async function createProduct(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The product could not be created due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -160,6 +169,7 @@ async function createProduct(
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
+        isErrorMessage: true,
         message: 'A product already exists with this name'
       };
     }
@@ -171,6 +181,7 @@ async function createProduct(
       return {
         statusCode: 201,
         statusMessage: 'Created',
+        isErrorMessage: false,
         message: 'The product has been created successfully',
         data: createdProduct
       };
@@ -181,6 +192,7 @@ async function createProduct(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The product could not be created due to an unexpected error'
     };
   }
@@ -211,6 +223,7 @@ async function updateProduct(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The product could not be updated due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -224,6 +237,7 @@ async function updateProduct(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No product was found with the id provided'
       };
     }
@@ -237,6 +251,7 @@ async function updateProduct(
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
+        isErrorMessage: true,
         message: 'A product already exists with this name'
       };
     }
@@ -248,6 +263,7 @@ async function updateProduct(
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The product has been updated successfully',
         data: updatedProduct
       };
@@ -258,6 +274,7 @@ async function updateProduct(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The product could not be updated due to an unexpected error'
     };
   }
@@ -276,6 +293,7 @@ async function deleteProduct(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No product could be found due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -289,6 +307,7 @@ async function deleteProduct(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No product was found with the id provided'
       };
     }
@@ -300,6 +319,7 @@ async function deleteProduct(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
+        isErrorMessage: true,
         message: 'The product could not be deleted becasuse it is present in orders'
       };
     }
@@ -311,6 +331,7 @@ async function deleteProduct(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The product has been deleted successfully'
       };
     } else {
@@ -320,6 +341,7 @@ async function deleteProduct(id: number): Promise<ResponseContentDTO<void>> {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The product could not be deleted due to an unexpected error'
     };
   }

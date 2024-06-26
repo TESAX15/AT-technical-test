@@ -11,6 +11,7 @@ export interface ResponseContentDTO<T> {
     | 'Not Found'
     | 'Conflict'
     | 'Internal Server Error';
+  isErrorMessage: boolean;
   message: string;
   data?: T;
   paginationPages?: Pages;

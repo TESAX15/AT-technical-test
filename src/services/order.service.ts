@@ -32,6 +32,7 @@ async function getAllOrders(page: number, limit: number): Promise<ResponseConten
     return {
       statusCode: 200,
       statusMessage: 'OK',
+      isErrorMessage: false,
       message: 'The orders have been found successfully',
       data: orders,
       paginationPages: orderPages
@@ -40,6 +41,7 @@ async function getAllOrders(page: number, limit: number): Promise<ResponseConten
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The orders could not be found due to an unexpected error'
     };
   }
@@ -74,6 +76,7 @@ async function getCurrentUserOrders(
     return {
       statusCode: 200,
       statusMessage: 'OK',
+      isErrorMessage: false,
       message: 'Your orders have been found successfully',
       data: orders,
       paginationPages: orderPages
@@ -82,6 +85,7 @@ async function getCurrentUserOrders(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The orders could not be found due to an unexpected error'
     };
   }
@@ -104,6 +108,7 @@ async function getOrderById(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No order could be found due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -116,6 +121,7 @@ async function getOrderById(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No order was found with the id provided'
       };
     }
@@ -125,6 +131,7 @@ async function getOrderById(
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The order has been found successfully',
         data: orderById
       };
@@ -132,6 +139,7 @@ async function getOrderById(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No order made by the user was found with the id provided'
       };
     }
@@ -139,6 +147,7 @@ async function getOrderById(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The order could not be found due to an unexpected error'
     };
   }
@@ -163,6 +172,7 @@ async function getOrdersByUserId(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No orders could be found due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -184,6 +194,7 @@ async function getOrdersByUserId(
     return {
       statusCode: 200,
       statusMessage: 'OK',
+      isErrorMessage: false,
       message: 'The orders made by the user have been found successfully',
       data: orders,
       paginationPages: orderPages
@@ -192,6 +203,7 @@ async function getOrdersByUserId(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The orders made by the user could not be found due to an unexpected error'
     };
   }
@@ -215,6 +227,7 @@ async function createOrder(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No order could be created due to the following validation errors: ' +
           [...new Set(validationErrors)].join(', ')
@@ -238,6 +251,7 @@ async function createOrder(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The product(s) with the following id(s) were included multiple times in the same order: ' +
           [...new Set(duplicateOrderProductsIds)].join(', ') +
@@ -258,6 +272,7 @@ async function createOrder(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No products were found with the id(s) provided'
       };
     }
@@ -277,6 +292,7 @@ async function createOrder(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message:
           'The product(s) with the following id(s) could not be found: ' +
           orderProductsNotFound.join(', ')
@@ -294,6 +310,7 @@ async function createOrder(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The following product(s) do not have enough available stock to fulfill the order:',
         data: insufficientStockProducts
@@ -334,6 +351,7 @@ async function createOrder(
         return {
           statusCode: 201,
           statusMessage: 'Created',
+          isErrorMessage: false,
           message: 'The order has been created successfully',
           data: createdOrder
         };
@@ -354,6 +372,7 @@ async function createOrder(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The order could not be created due to an unexpected error'
     };
   }
@@ -376,6 +395,7 @@ async function cancelOrder(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No order could be canceled due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -388,6 +408,7 @@ async function cancelOrder(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No order was found with the id provided'
       };
     }
@@ -418,6 +439,7 @@ async function cancelOrder(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message: errorMessage
       };
     }
@@ -445,6 +467,7 @@ async function cancelOrder(
         return {
           statusCode: 200,
           statusMessage: 'OK',
+          isErrorMessage: false,
           message: 'The order has been canceled successfully',
           data: canceledOrder
         };
@@ -455,6 +478,7 @@ async function cancelOrder(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No order made by the user was found with the id provided'
       };
     }
@@ -462,6 +486,7 @@ async function cancelOrder(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The order could not be canceled due to an unexpected error'
     };
   }
@@ -480,6 +505,7 @@ async function advanceOrderStatusById(orderId: number): Promise<ResponseContentD
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The order status could not be advanced due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -492,6 +518,7 @@ async function advanceOrderStatusById(orderId: number): Promise<ResponseContentD
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No order was found with the id provided'
       };
     }
@@ -504,6 +531,7 @@ async function advanceOrderStatusById(orderId: number): Promise<ResponseContentD
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The order status cannot be advanced because the order is completed, only orders with the pending, processing or shipped status can be advanced'
       };
@@ -523,6 +551,7 @@ async function advanceOrderStatusById(orderId: number): Promise<ResponseContentD
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The order status has been advanced successfully',
         data: advancedStatusOrder
       };
@@ -533,6 +562,7 @@ async function advanceOrderStatusById(orderId: number): Promise<ResponseContentD
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The order status could not be advanced due to an unexpected error'
     };
   }
@@ -551,6 +581,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No order could be deleted due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -563,6 +594,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No order was found with the id provided'
       };
     }
@@ -576,6 +608,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The order cannot be deleted because it is still ongoing, only delivered or canceled orders can be deleted'
       };
@@ -586,6 +619,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The order has been deleted successfully'
       };
     } else {
@@ -595,6 +629,7 @@ async function deleteOrderById(orderId: number): Promise<ResponseContentDTO<Orde
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The order could not be deleted due to an unexpected error'
     };
   }
