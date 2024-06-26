@@ -99,7 +99,9 @@ async function getUserById(id: number): Promise<ResponseContentDTO<User | null>>
  * @param createUserData, the data sent from the controller to create a user
  * @returns responseContentDTO, the result from this function to be sent in the response
  */
-async function createUser(createUserData: CreateUserDTO): Promise<ResponseContentDTO<void>> {
+async function createUser(
+  createUserData: CreateUserDTO
+): Promise<ResponseContentDTO<Omit<User, 'passwordHash' | 'isBlocked'>>> {
   try {
     const validationErrors = userValidation.validateUserCreationData({
       email: createUserData.email,
@@ -142,7 +144,8 @@ async function createUser(createUserData: CreateUserDTO): Promise<ResponseConten
         statusCode: 201,
         statusMessage: 'Created',
         isErrorMessage: false,
-        message: 'The user has been created correctly'
+        message: 'The user has been created correctly',
+        data: { id: createdUser.id, email: createdUser.email, userRole: createdUser.userRole }
       };
     } else {
       throw new Error('The user could not be created successfully');
