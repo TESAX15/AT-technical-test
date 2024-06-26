@@ -25,6 +25,7 @@ async function signUpUser(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be signed up due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -37,6 +38,7 @@ async function signUpUser(
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
+        isErrorMessage: true,
         message: 'A user already exists with this email'
       };
     }
@@ -46,13 +48,14 @@ async function signUpUser(
     const createdUser = await userRepository.createUser({
       email: userSignUpData.email,
       passwordHash: passwordHash,
-      userRole: 'Non-Admin'
+      userRole: 'NonAdmin'
     });
 
     if (createdUser) {
       return {
         statusCode: 201,
         statusMessage: 'Created',
+        isErrorMessage: false,
         message: 'The user has been signed up correctly',
         data: { id: createdUser.id, email: createdUser.email }
       };
@@ -63,6 +66,7 @@ async function signUpUser(
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be signed up due to an unexpected error'
     };
   }
@@ -84,6 +88,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be signed up due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -96,6 +101,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No user with the email provided was found'
       };
     }
@@ -104,6 +110,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
       return {
         statusCode: 401,
         statusMessage: 'Unauthorized',
+        isErrorMessage: true,
         message: 'The user is blocked'
       };
     }
@@ -119,6 +126,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The user has successfully logged in',
         data: token
       };
@@ -126,6 +134,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
       return {
         statusCode: 401,
         statusMessage: 'Unauthorized',
+        isErrorMessage: true,
         message: 'The email and password provided do not match'
       };
     }
@@ -133,6 +142,7 @@ async function logInUser(userLogInData: UserLogInDTO): Promise<ResponseContentDT
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be logged in due to an unexpected error'
     };
   }

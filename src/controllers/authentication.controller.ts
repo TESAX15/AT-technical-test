@@ -29,6 +29,7 @@ async function logIn(req: express.Request, res: express.Response) {
     return res.status(401).send({
       statusCode: 401,
       statusMessage: 'Unauthorized',
+      isErrorMessage: true,
       message: 'A user is already logged in'
     });
   }
@@ -58,6 +59,7 @@ async function logout(req: express.Request, res: express.Response) {
     return res.status(404).send({
       statusCode: 404,
       statusMessage: 'Not Found',
+      isErrorMessage: true,
       message: 'There is no user logged in'
     });
   }
@@ -68,6 +70,7 @@ async function logout(req: express.Request, res: express.Response) {
   return res.status(200).send({
     statusCode: 200,
     statusMessage: 'OK',
+    isErrorMessage: false,
     message: 'The user has successfully logged out'
   });
 }

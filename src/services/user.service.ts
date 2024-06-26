@@ -8,6 +8,12 @@ import { ResponseContentDTO } from '../dto/response-content/response-content.dto
 import { CreateUserDTO } from '../dto/user/create-user.dto';
 import { UpdateUserDTO } from '../dto/user/update-user.dto';
 
+/**
+ * Function that validates the business logic to get all user with result pagination and uses a repository to find them in the DB
+ * @param page, the number of the page to be seen
+ * @param limit, the number of items to be shown in a page
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
 async function getAllUsers(page: number, limit: number): Promise<ResponseContentDTO<User[]>> {
   try {
     const userCount = await userRepository.countUsers();
@@ -25,6 +31,7 @@ async function getAllUsers(page: number, limit: number): Promise<ResponseContent
     return {
       statusCode: 200,
       statusMessage: 'OK',
+      isErrorMessage: false,
       message: 'The users have been found successfully',
       data: users,
       paginationPages: userPages
@@ -33,11 +40,17 @@ async function getAllUsers(page: number, limit: number): Promise<ResponseContent
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The users could not be found due to an unexpected error'
     };
   }
 }
 
+/**
+ * Function that validates the business logic to get a user by it's id and uses a repository to find them in the DB
+ * @param id, the id of the user to be found
+ * @returns responseContentDTO, the result from this function to be sent in the response
+ */
 async function getUserById(id: number): Promise<ResponseContentDTO<User | null>> {
   try {
     const validationErrors = numericIdValidation.validateNumericId(id);
@@ -46,6 +59,7 @@ async function getUserById(id: number): Promise<ResponseContentDTO<User | null>>
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'No user could be found due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -58,6 +72,7 @@ async function getUserById(id: number): Promise<ResponseContentDTO<User | null>>
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The user has been found successfully',
         data: userById
       };
@@ -65,6 +80,7 @@ async function getUserById(id: number): Promise<ResponseContentDTO<User | null>>
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No user was found with the id provided'
       };
     }
@@ -72,6 +88,7 @@ async function getUserById(id: number): Promise<ResponseContentDTO<User | null>>
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be found due to an unexpected error'
     };
   }
@@ -94,18 +111,20 @@ async function createUser(createUserData: CreateUserDTO): Promise<ResponseConten
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be created due to the following validation errors: ' +
           validationErrors.join(', ')
       };
     }
 
-    const userAlreadyExists = await userRepository.findUserByEmail(createUserData.email);
+    const userEmailAlreadyExists = await userRepository.findUserByEmail(createUserData.email);
 
-    if (userAlreadyExists) {
+    if (userEmailAlreadyExists) {
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
+        isErrorMessage: true,
         message: 'A user already exists with this email'
       };
     }
@@ -122,6 +141,7 @@ async function createUser(createUserData: CreateUserDTO): Promise<ResponseConten
       return {
         statusCode: 201,
         statusMessage: 'Created',
+        isErrorMessage: false,
         message: 'The user has been created correctly'
       };
     } else {
@@ -131,6 +151,7 @@ async function createUser(createUserData: CreateUserDTO): Promise<ResponseConten
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be created due to an unexpected error'
     };
   }
@@ -161,6 +182,7 @@ async function updateUser(
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be updated due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -174,17 +196,19 @@ async function updateUser(
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No user was found with the id provided'
       };
     }
 
-    const userAlreadyExists = await userRepository.findUserByEmail(updateUserData.email);
+    const userEmailAlreadyExists = await userRepository.findUserByEmail(updateUserData.email);
 
     // Checking to see if a user with the provided email already exists and if that email is different from the one to update
-    if (userAlreadyExists && userExists.email != updateUserData.email) {
+    if (userEmailAlreadyExists && userExists.email != updateUserData.email) {
       return {
         statusCode: 409,
         statusMessage: 'Conflict',
+        isErrorMessage: true,
         message: 'A user already exists with the email provided'
       };
     }
@@ -203,16 +227,18 @@ async function updateUser(
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The user has been updated successfully',
         data: updatedUser
       };
     } else {
       throw new Error('The user was not updated successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be updated due to an unexpected error'
     };
   }
@@ -231,6 +257,7 @@ async function blockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be blocked due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -244,6 +271,7 @@ async function blockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No user was found with the id provided'
       };
     }
@@ -253,6 +281,7 @@ async function blockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 403,
         statusMessage: 'Forbidden',
+        isErrorMessage: true,
         message: 'The user found with the id provided is already blocked'
       };
     }
@@ -264,15 +293,17 @@ async function blockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The user has been blocked successfully'
       };
     } else {
       throw new Error('The user was not blocked successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be blocked due to an unexpected error'
     };
   }
@@ -291,6 +322,7 @@ async function unblockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be unblocked due to the following validation errors: ' +
           validationErrors.join(', ')
@@ -304,6 +336,7 @@ async function unblockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No user was found with the id provided'
       };
     }
@@ -313,6 +346,7 @@ async function unblockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 403,
         statusMessage: 'Forbidden',
+        isErrorMessage: true,
         message: 'The user found with the id provided is not blocked'
       };
     }
@@ -324,15 +358,17 @@ async function unblockUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The user has been unblocked successfully'
       };
     } else {
       throw new Error('The user was not unblocked successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be unblocked due to an unexpected error'
     };
   }
@@ -351,20 +387,10 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 400,
         statusMessage: 'Bad Request',
+        isErrorMessage: true,
         message:
           'The user could not be deleted due to the following validation errors: ' +
           validationErrors.join(', ')
-      };
-    }
-
-    const userHasMadeOrders = await userRepository.userHasMadeOrders(id);
-
-    // If a user has orders in the DB then it can't be deleted because of the FK from order table to user table
-    if (userHasMadeOrders) {
-      return {
-        statusCode: 409,
-        statusMessage: 'Conflict',
-        message: 'The user could not be deleted becasuse it has made orders before'
       };
     }
 
@@ -375,7 +401,20 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 404,
         statusMessage: 'Not Found',
+        isErrorMessage: true,
         message: 'No user was found with the id provided'
+      };
+    }
+
+    const userHasMadeOrders = await userRepository.userHasMadeOrders(id);
+
+    // If a user has orders in the DB then it can't be deleted because of the FK from order table to user table
+    if (userHasMadeOrders) {
+      return {
+        statusCode: 409,
+        statusMessage: 'Conflict',
+        isErrorMessage: true,
+        message: 'The user could not be deleted becasuse it has made orders before'
       };
     }
 
@@ -386,15 +425,17 @@ async function deleteUser(id: number): Promise<ResponseContentDTO<void>> {
       return {
         statusCode: 200,
         statusMessage: 'OK',
+        isErrorMessage: false,
         message: 'The user has been deleted successfully'
       };
     } else {
       throw new Error('The user was not deleted successfully');
     }
-  } catch (error) {
+  } catch {
     return {
       statusCode: 500,
       statusMessage: 'Internal Server Error',
+      isErrorMessage: true,
       message: 'The user could not be deleted due to an unexpected error'
     };
   }
