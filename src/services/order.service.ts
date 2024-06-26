@@ -1,5 +1,6 @@
 import { orderRepository } from '../repositories/order.repository';
 import { productRepository } from '../repositories/product.repository';
+import { userRepository } from '../repositories/user.repository';
 import { paginationUtil } from '../utils/pagination.util';
 import { numericIdValidation } from '../input-validation/numeric-id.validation';
 import { orderValidation } from '../input-validation/order.validation';
@@ -178,6 +179,19 @@ async function getOrdersByUserId(
           validationErrors.join(', ')
       };
     }
+
+    const userExists = await userRepository.findUserById(userId);
+
+    // Checking to see if a user with the id provided exists
+    if (!userExists) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        isErrorMessage: true,
+        message: 'No user was found with the id provided'
+      };
+    }
+
     const orderCount = await orderRepository.countUserOrders(userId);
     const paginationParams = paginationUtil.validatePaginationParams(page, limit);
     // Calculates the pagination based on the validated parameters
