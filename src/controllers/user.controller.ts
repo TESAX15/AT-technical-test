@@ -84,8 +84,9 @@ async function unblockUser(req: AuthenticatedUserRequest, res: express.Response)
  */
 async function deleteUserById(req: AuthenticatedUserRequest, res: express.Response) {
   const id = Number(req.params.id);
+  const userId = req.authenticatedUser!.id;
 
-  const responseContent = await userService.deleteUser(id);
+  const responseContent = await userService.deleteUser(id, userId);
   res.status(responseContent.statusCode).send(responseContent);
 }
 
