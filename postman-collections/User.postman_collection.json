@@ -1,0 +1,1748 @@
+{
+	"info": {
+		"_postman_id": "d6171892-540a-452b-8ce2-d47ab19e6da0",
+		"name": "User",
+		"description": "# This collection documents the endpoints of the user management features\n\nThe features included are:\n\n- Get All Users(Admin Only): a feature to get all the users with result pagination.\n    \n- Get User By Id(Admin Only): a feature to get a user found by its id.\n    \n- Create User(Admin Only): a feature to create a user.\n    \n- Update User(Admin Only): a feature to update a user found by its id.\n    \n- Block User(Admin Only): a feature to block a user found by its id.\n    \n- Unblock User(Admin Only): a feature to unblock a user found by its id.\n    \n- Delete User(Admin Only): a feature to delete a user found by its id.\n    \n\n\\*Note: Every user route has the authenticated user middleware & authorized user middleware, so if there is no authenticated user logged in or if the current user is not an admin the request send a 404 error or a 403 error. This will happen for every endpoint but the only example shown in the collection is on the Get All Users endpoint, so as not to repeat the same outcome multiple times.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21428321"
+	},
+	"item": [
+		{
+			"name": "Get All Users (Admin Only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/user/all?page=2&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"all"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "The Get All Users endpoint allows admin users to get a paginated list of every user.\n\nReceives: a page (number, required) and limit (number, required) parameters from the request query.\n\nChecks: validity of pagination parameters, if they fail or were not included they are defaulted to page = 1 & limit = 10."
+			},
+			"response": [
+				{
+					"name": "Successful Get all users",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "357"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"165-qneLSmQi39g0K3h9YVdRTvINx54\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 01:52:03 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The users have been found successfully\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"email\": \"admin.user@gmail.com\",\n            \"passwordHash\": \"$2b$10$4j5NKkx0WWJOtqjE6zOGq.nhSfOWaeJydHkI7gWKCywWBkg/wcdGe\",\n            \"userRole\": \"Admin\",\n            \"isBlocked\": false\n        }\n    ],\n    \"paginationPages\": {\n        \"next\": {\n            \"page\": 3,\n            \"limit\": 1\n        },\n        \"previous\": {\n            \"page\": 1,\n            \"limit\": 1\n        }\n    }\n}"
+				},
+				{
+					"name": "No user logged in",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"28-65SaVlucbCeez0YwFq44gLfIu1g\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 01:49:02 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "There is no authenticated user logged in"
+				},
+				{
+					"name": "Logged in user is not admin",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "71"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"47-h/EpFa81/lVAo6LGUK/5wlWP6Ow\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 01:50:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "The user logged in does not have enough privileges to access this route"
+				}
+			]
+		},
+		{
+			"name": "Get User By Id (Admin Only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/user/by-id1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"by-id1"
+					]
+				},
+				"description": "The Get User By Id endpoint allows admin users to get a user found by its id, in the example shown that id is 1.\n\nReceives: a user id (number, required) from the request parameters.\n\nChecks: validity of user id parameter, if a user with the id provided exists."
+			},
+			"response": [
+				{
+					"name": "Successful Get User By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/by-id1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"by-id1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "277"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"115-z8P+3WX+dtOU8eEVpMrD7+Nf9jg\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:05:14 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been found successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"email\": \"blocked.user@gmail.com\",\n        \"passwordHash\": \"$2b$10$BWOCOCg.CCsdC.obMbnDdeySAoEpscNq11YN95ApqTvNHC/SKqW6O\",\n        \"userRole\": \"NonAdmin\",\n        \"isBlocked\": true\n    }\n}"
+				},
+				{
+					"name": "No user found with id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/by-id15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"by-id15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-h9PNpA917ynY4p5w9Wsmj4rZjHw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:08:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid user id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/by-ida",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"by-ida"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "177"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b1-bkK9Mf/ewd6aK7Ipa1NPUQsrl2c\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:06:08 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user could be found due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User (Admin Only)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"user.to.create@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/user/create",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"create"
+					]
+				},
+				"description": "The Create User endpoint allows an admin user to create a new user with the possibility of making it an admin user, which is not allowed in the Sign Up endpoint.\n\nReceives: a body with a valid email (string, required), password (string, required) and user role ('NonAdmin' or 'Admin', required).\n\nChecks: validity of body, that no other user already exists with the provided email."
+			},
+			"response": [
+				{
+					"name": "Successful Create User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user.to.create@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"create"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "186"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ba-71O1rmy5EIrH4S4CoU+UR208+M4\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:24:43 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 201,\n    \"statusMessage\": \"Created\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been created correctly\",\n    \"data\": {\n        \"id\": 13,\n        \"email\": \"user.to.create@gmail.com\",\n        \"userRole\": \"Admin\"\n    }\n}"
+				},
+				{
+					"name": "Email used by another user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"create"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "117"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"75-Ei2NT2hRhrWsYyhPQ0WVsSbTT1g\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:10:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"A user already exists with this email\"\n}"
+				},
+				{
+					"name": "Invalid email, password & role",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"userRole\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"create"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "297"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"129-cd7SMrmDGMWEt67gcrwZIb72jkg\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:27:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be created due to the following validation errors: the email provided is invalid, the password should be at least 8 characters long, Invalid enum value. Expected 'NonAdmin' | 'Admin', received ''\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update User (Admin Only)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"updated.user@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\",\r\n    \"isBlocked\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/user/update3",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"update3"
+					]
+				},
+				"description": "The Update User By Id endpoint allows admin users to update a user found by its id, in the example shown that id is 3.\n\nReceives: a user id (number, required) from the request parameters and a body with a valid email (string, required), password (string, required) and user role ('NonAdmin' or 'Admin', required) and is blocked (boolean, required).\n\nChecks: validity of user id parameter, validity of body, that no other user already exists with the provided email(unless its the user to be updated), if a user with the id provided exists."
+			},
+			"response": [
+				{
+					"name": "Successful Update User",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"updated.user@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\",\r\n    \"isBlocked\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/update3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"update3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "277"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"115-kfPOGI1eCsww4aLCyHw+d6JtFaA\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:37:25 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been updated successfully\",\n    \"data\": {\n        \"id\": 3,\n        \"email\": \"updated.user@gmail.com\",\n        \"passwordHash\": \"$2b$10$AK9iyUXNEHF8AlVAm6Tm7uHvu0F..WH64N22.rcNhnUsJrCD3hBqq\",\n        \"userRole\": \"Admin\",\n        \"isBlocked\": false\n    }\n}"
+				},
+				{
+					"name": "No user found with id",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"updated.user@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\",\r\n    \"isBlocked\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/update15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"update15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-h9PNpA917ynY4p5w9Wsmj4rZjHw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:45:31 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user was found with the id provided\"\n}"
+				},
+				{
+					"name": "Email used by another user",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\",\r\n    \"isBlocked\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/update3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"update3"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "125"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"7d-BA5O1AxgOTYE5JV/yqDvn4RC7SE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:46:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"A user already exists with the email provided\"\n}"
+				},
+				{
+					"name": "Invalid email, password, user role & is blocked",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"userRole\": \"\",\r\n    \"isBlocked\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/update3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"update3"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "338"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"152-XyZ20lAwAdu4IoVkp1t6mvY0Kr8\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:38:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be updated due to the following validation errors: the email provided is invalid, the password should be at least 8 characters long, Invalid enum value. Expected 'NonAdmin' | 'Admin', received '', the isBlocked provided is not a boolean\"\n}"
+				},
+				{
+					"name": "Invalid user id",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"updated.user@gmail.com\",\r\n    \"password\": \"contra123.\",\r\n    \"userRole\": \"Admin\",\r\n    \"isBlocked\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user/updatea",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"updatea"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "184"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b8-LA9yZHEaYcnHybjCqRU3BDOtshk\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:42:43 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be updated due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Block User (Admin Only)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/user/block3",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"block3"
+					]
+				},
+				"description": "The Block User By Id endpoint allows admin users to block a user found by its id, in the example shown that id is 3.\n\nReceives: a user id (number, required) from the request parameters.\n\nChecks: validity of user id parameter, if a user with the id provided exists, and if the user is not already blocked."
+			},
+			"response": [
+				{
+					"name": "Successful Block User",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/block3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"block3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "113"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"71-iPKAIorSTfTesmi0f0evUiaN0I4\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:00:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been blocked successfully\"\n}"
+				},
+				{
+					"name": "User is already blocked",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/block3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"block3"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "135"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"87-j91V274dzMF/qLV6ybORtjm7F08\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:01:06 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 403,\n    \"statusMessage\": \"Forbidden\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user found with the id provided is already blocked\"\n}"
+				},
+				{
+					"name": "No user found with id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/block15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"block15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-h9PNpA917ynY4p5w9Wsmj4rZjHw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:01:58 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid user id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/blocka",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"blocka"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "184"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b8-ji3+5qRbFyFC1TVx1mqskavcbL8\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:01:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be blocked due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Unblock User (Admin Only)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/user/unblock1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"unblock1"
+					]
+				},
+				"description": "The Unblock User By Id endpoint allows admin users to unblock a user found by its id, in the example shown that id is 1.\n\nReceives: a user id (number, required) from the request parameters.\n\nChecks: validity of user id parameter, if a user with the id provided exists, and if the user is not blocked."
+			},
+			"response": [
+				{
+					"name": "Successful Unblock User",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/unblock1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"unblock1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "115"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"73-d60RBIlpLgnWU9u+LuZ0O0X23/I\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:05:09 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been unblocked successfully\"\n}"
+				},
+				{
+					"name": "User is not blocked",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/unblock1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"unblock1"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "131"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"83-5W0gZ83RB3JiuxouAPBwLCxm+nQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:05:26 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 403,\n    \"statusMessage\": \"Forbidden\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user found with the id provided is not blocked\"\n}"
+				},
+				{
+					"name": "No user found with id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/unblock15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"unblock15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-h9PNpA917ynY4p5w9Wsmj4rZjHw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:07:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid user id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/unblocka",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"unblocka"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "186"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ba-bQOKTQ7xyDOTYdXVB/HkPSM3YCE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:05:59 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be unblocked due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete User (Admin Only)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/user/delete4",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"delete4"
+					]
+				},
+				"description": "The Delete User By Id endpoint allows admin users to delete a user found by its id, in the example shown that id is 4.\n\nReceives: a user id (number, required) from the request parameters.\n\nChecks: validity of user id parameter, if a user with the id provided exists, that the user is not deleting itself and if the user has not made orders before (If it has made orders it cannot be deleted to preserve the order information integrity)."
+			},
+			"response": [
+				{
+					"name": "Successful Delete User",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/delete4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"delete4"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "113"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"71-zLtFyStXKeO1ctrWi456UOa0AP0\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:12:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been deleted successfully\"\n}"
+				},
+				{
+					"name": "Not deleted because it has made orders before",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/delete4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"delete4"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "144"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"90-T3IPKj3TZdFVs1n/2NF/BaPhAmk\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 02:53:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be deleted becasuse it has made orders before\"\n}"
+				},
+				{
+					"name": "User cannot delete itself",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/delete2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"delete2"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "146"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"92-JXsOi4OQd8jUtBvglnXqmUJiGWE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:16:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be deleted becasuse a user cannot delete itself\"\n}"
+				},
+				{
+					"name": "No user found with id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/delete15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"delete15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-h9PNpA917ynY4p5w9Wsmj4rZjHw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:13:55 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid user id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user/deletea",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"deletea"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "184"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b8-k1ZBVVmy41JO/eZEA0mNMT16YCg\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:15:21 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be deleted due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

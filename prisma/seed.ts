@@ -52,6 +52,7 @@ async function main() {
       userRole: 'NonAdmin'
     }
   });
+  console.log('Seeding Users');
   console.log({ blockedUser, adminUser, userToUpdate, userToDelete, userWithOrders });
 
   // Product Seeding
@@ -95,6 +96,7 @@ async function main() {
       availableStock: 4
     }
   });
+  console.log('Seeding Products');
   console.log({ product1, product2, product3, product4 });
 
   // Order Seeding
@@ -190,6 +192,7 @@ async function main() {
       }
     }
   });
+  console.log('Seeding Orders');
   console.log({ order1, order2, order3, order4 });
 }
 main()

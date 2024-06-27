@@ -1,0 +1,1322 @@
+{
+	"info": {
+		"_postman_id": "93c1769b-7b54-4719-841a-5fcfb9335d3a",
+		"name": "Product",
+		"description": "# This collection documents the endpoints of the product inventory management features\n\nThe endpoints included are:\n\n- Get All Products: a feature to get all the products with result pagination.\n    \n- Get Available Products: a feature to get all the available products with result pagination.\n    \n- Get Product By Id: a feature to get a product found by its id.\n    \n- Create Product(Admin Only): a feature to create a product.\n    \n- Update Product(Admin Only): a feature to update a product found by its id.\n    \n- Delete Product(Admin Only): a feature to delete a product found by its id.\n    \n\n\\*Note: Every product route has the authenticated user middleware , so if there is no authenticated user logged in, the request send a 404 error. This will happen for every endpoint but the only example shown in the collection is on the Get All Products endpoint, so as not to repeat the same outcome multiple times.\n\nThe routes marked with (Admin Only) have the authorized user middleware, so if the current user is not an admin, the request sends a 403 error. This will happen for every (Admin Only) endpoint but the only example shown in the collection is on the Create Product endpoint, so as not to repeat the same outcome multiple times.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21428321"
+	},
+	"item": [
+		{
+			"name": "Get All Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/product/all?page=2&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"all"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "The Get All Products endpoint allows authenticated users to get a paginated list of every product.\n\nReceives: a page (number, optional) and limit (number, optional) parameters from the request query.\n\nChecks: validity of pagination parameters, if they fail or were not included they are defaulted to page = 1 & limit = 10."
+			},
+			"response": [
+				{
+					"name": "Successful Get All Products",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "292"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"124-/Uzb3KGhYPczSOMA2GmjnhI9liQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:59:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The products have been found successfully\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"name\": \"product 2\",\n            \"description\": \"description 2\",\n            \"price\": 2,\n            \"availableStock\": 0\n        }\n    ],\n    \"paginationPages\": {\n        \"next\": {\n            \"page\": 3,\n            \"limit\": 1\n        },\n        \"previous\": {\n            \"page\": 1,\n            \"limit\": 1\n        }\n    }\n}"
+				},
+				{
+					"name": "No user logged in",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"28-65SaVlucbCeez0YwFq44gLfIu1g\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:54:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "There is no authenticated user logged in"
+				}
+			]
+		},
+		{
+			"name": "Get Available Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/product/available?page=2&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"available"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "The Get Available Products endpoint allows authenticated users to get a paginated list of every product that has available stock.\n\nReceives: a page (number, optional) and limit (number, optional) parameters from the request query.\n\nChecks: validity of pagination parameters, if they fail or were not included they are defaulted to page = 1 & limit = 10."
+			},
+			"response": [
+				{
+					"name": "Successful Get Available Products",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/available?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"available"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "302"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"12e-VOYLPGuBCQeUVhAT4yUr6rAsQb8\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 03:59:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The available products have been found successfully\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"name\": \"product 3\",\n            \"description\": \"description 3\",\n            \"price\": 3,\n            \"availableStock\": 3\n        }\n    ],\n    \"paginationPages\": {\n        \"next\": {\n            \"page\": 3,\n            \"limit\": 1\n        },\n        \"previous\": {\n            \"page\": 1,\n            \"limit\": 1\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Product By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/product/by-id2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"by-id2"
+					]
+				},
+				"description": "The Get Product By Id endpoint allows authenticated users to get a product found by its id, in the example shown that id is 2.\n\nReceives: a product id (number, required) from the request parameters.\n\nChecks: validity of product id parameter, if a product with the id provided exists."
+			},
+			"response": [
+				{
+					"name": "Successful Get Product By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/by-id2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"by-id2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "208"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"d0-cS8r/aOSuAjKgFP/dx0Vz+DcypU\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:01:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The product has been found successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"product 2\",\n        \"description\": \"description 2\",\n        \"price\": 2,\n        \"availableStock\": 0\n    }\n}"
+				},
+				{
+					"name": "No product found with id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/by-id15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"by-id15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "122"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"7a-jghrzQHKAlTuEO17pszcacnoGJE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:03:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No product was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid product id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/by-ida",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"by-ida"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "180"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b4-IOYeOtqA+xoNjUNcooRIfST/ecA\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:02:19 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No product could be found due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Product (Admin Only)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"product 5\",\r\n    \"description\": \"description 5\",\r\n    \"price\": 5,\r\n    \"availableStock\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/product/create",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"create"
+					]
+				},
+				"description": "The Create Product endpoint allows authenticated users to create a new product.\n\nReceives: a body with a valid name (string, required), description (string, required), price (number, required) & available stock (number, required).\n\nChecks: validity of body, that no other product already exists with the provided name."
+			},
+			"response": [
+				{
+					"name": "Successful Create Product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 5\",\r\n    \"description\": \"description 5\",\r\n    \"price\": 5,\r\n    \"availableStock\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"create"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "216"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"d8-nNcUEi/wvf7d9ZrFsrGy2FPyxZI\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:17:08 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 201,\n    \"statusMessage\": \"Created\",\n    \"isErrorMessage\": false,\n    \"message\": \"The product has been created successfully\",\n    \"data\": {\n        \"id\": 10,\n        \"name\": \"product 5\",\n        \"description\": \"description 5\",\n        \"price\": 5,\n        \"availableStock\": 5\n    }\n}"
+				},
+				{
+					"name": "Name used by another product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 2\",\r\n    \"description\": \"description 5\",\r\n    \"price\": 5,\r\n    \"availableStock\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"create"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-RAVYM4t1XVOSAbiy3qO+801LgaQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:19:10 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"A product already exists with this name\"\n}"
+				},
+				{
+					"name": "Invalid name, description, price & stock",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"description\": \"\",\r\n    \"price\": -1,\r\n    \"availableStock\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"create"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "349"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"15d-luYYhY/50JFakVBZ3hQMutWH6oQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:19:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The product could not be created due to the following validation errors: the name cannot be empty, the description cannot be empty, the price number provided must be greater than or equal to 0.01, the availableStock number provided must be greater than or equal to 1\"\n}"
+				},
+				{
+					"name": "Logged in user is not admin",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 5\",\r\n    \"description\": \"description 5\",\r\n    \"price\": 5,\r\n    \"availableStock\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"create"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "71"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"47-h/EpFa81/lVAo6LGUK/5wlWP6Ow\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:45:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "The user logged in does not have enough privileges to access this route"
+				}
+			]
+		},
+		{
+			"name": "Update Product (Admin Only)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"product 2\",\r\n    \"description\": \"description 2 updated\",\r\n    \"price\": 2,\r\n    \"availableStock\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/product/update2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"update2"
+					]
+				},
+				"description": "The Update Product endpoint allows admin users to update a product found by its id, in the example shown that id is 2.\n\nReceives: a product id (number, required) from the request parameters and a body with a valid name (string, required), description (string, required), price (number, required) & available stock (number, required).\n\nChecks: validity of product id parameter, validity of body, that no other product already exists with the provided name(unless its the product to be updated), if a product with the id provided exists."
+			},
+			"response": [
+				{
+					"name": "Successful Update Product",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 2\",\r\n    \"description\": \"description 2 updated\",\r\n    \"price\": 2,\r\n    \"availableStock\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/update2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"update2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "218"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"da-dSPyjJdxPigPMDI0/QsLO2GjbQQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:26:09 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The product has been updated successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"product 2\",\n        \"description\": \"description 2 updated\",\n        \"price\": 2,\n        \"availableStock\": 2\n    }\n}"
+				},
+				{
+					"name": "No product found with id",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 2\",\r\n    \"description\": \"description 2 updated\",\r\n    \"price\": 2,\r\n    \"availableStock\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/update15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"update15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "122"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"7a-jghrzQHKAlTuEO17pszcacnoGJE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:27:56 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No product was found with the id provided\"\n}"
+				},
+				{
+					"name": "Name used by another product",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 3\",\r\n    \"description\": \"description 2 updated\",\r\n    \"price\": 2,\r\n    \"availableStock\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/update2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"update2"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-RAVYM4t1XVOSAbiy3qO+801LgaQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:33:20 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"A product already exists with this name\"\n}"
+				},
+				{
+					"name": "Invalid name, description, price & stock",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"description\": \"\",\r\n    \"price\": -1,\r\n    \"availableStock\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/update2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"update2"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "349"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"15d-XumzXXHp1c2Ad+9SEEr5NuNlTv0\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:27:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The product could not be updated due to the following validation errors: the name cannot be empty, the description cannot be empty, the price number provided must be greater than or equal to 0.01, the availableStock number provided must be greater than or equal to 1\"\n}"
+				},
+				{
+					"name": "Invalid product id",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"product 2\",\r\n    \"description\": \"description 2 updated\",\r\n    \"price\": 2,\r\n    \"availableStock\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product/updatea",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"updatea"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "187"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"bb-fsv96zwMrCLduAN5hn519zci+Ow\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:28:31 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The product could not be updated due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Product (Admin Only)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/product/delete1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"product",
+						"delete1"
+					]
+				},
+				"description": "The Delete Product endpoint allows admin users to delete a product found by its id, in the example shown that id is 1.\n\nReceives: a product id (number, required) from the request parameters.\n\nChecks: validity of product id parameter, if a product with the id provided exists and if the product is not present in any orders (If it is part of any orders it cannot be deleted to preserve the order information integrity)."
+			},
+			"response": [
+				{
+					"name": "Successful Delete Product",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/delete1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"delete1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "116"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"74-V7G1nfCmpD9VBRMzWfKBi50J+Nk\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:34:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The product has been deleted successfully\"\n}"
+				},
+				{
+					"name": "Not deleted because it's present in orders",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/delete3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"delete3"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "145"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"91-IWQyy49rZyrSHN8HzGbr6MSivA0\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:39:23 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"The product could not be deleted becasuse it is present in orders\"\n}"
+				},
+				{
+					"name": "No product found with id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/delete15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"delete15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "122"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"7a-jghrzQHKAlTuEO17pszcacnoGJE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:35:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No product was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid product id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/product/deletea",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"deletea"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "180"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b4-IOYeOtqA+xoNjUNcooRIfST/ecA\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 04:36:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No product could be found due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

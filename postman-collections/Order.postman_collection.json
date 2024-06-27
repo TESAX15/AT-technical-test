@@ -1,0 +1,2045 @@
+{
+	"info": {
+		"_postman_id": "d2ed54ae-abc6-4c8e-b6d2-2532df024b4a",
+		"name": "Order",
+		"description": "# This collection documents the endpoints of the order processing features\n\nThe endpoints included are:\n\n- Get All Orders(Admin Only): a feature to get all the orders with result pagination.\n    \n- Get Current User Orders: a feature to get all the orders made by the user that is currently logged in, with result pagination.\n    \n- Get Order By Id: a feature to get an order found by its id.\n    \n- Get Orders By User Id(Admin Only): a feature to get all the orders made by a user, found by the user's id.\n    \n- Create Order: a feature to create an order.\n    \n- Cancel Order: a feature to cancel an order found by its id.\n    \n- Advance Order Status(Admin Only): a feature to advance an order's status found by the order's id.\n    \n- Delete Order(Admin Only): a feature to delete a completed order found by its id.\n    \n\n\\*Note: Every order route has the authenticated user middleware , so if there is no authenticated user logged in, the request send a 404 error. This will happen for every endpoint but the only example shown in the collection is on the Get Current User Orders endpoint, so as not to repeat the same outcome multiple times.\n\nThe routes marked with (Admin Only) have the authorized user middleware, so if the current user is not an admin, the request sends a 403 error. This will happen for every (Admin Only) endpoint but the only example shown in the collection is on the Get All Orders endpoint, so as not to repeat the same outcome multiple times.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21428321"
+	},
+	"item": [
+		{
+			"name": "Get All Orders (Admin Only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/all?page=2&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"all"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "The Get All Orders endpoint allows admin users to get a paginated list of every order.\n\nReceives: a page(number, optional) and limit(number, optional) parameters from the request query.\n\nChecks: validity of pagination parameters, if they fail or were not included they are defaulted to page = 1 & limit = 10."
+			},
+			"response": [
+				{
+					"name": "Succesful Get All Orders",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "627"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"273-m7U0EpQXjkkXwLBioK91G7Ug2dY\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:51:54 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The orders have been found successfully\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"userId\": 5,\n            \"orderStatus\": \"Pending\",\n            \"creationDate\": \"2024-06-26T05:30:19.331Z\",\n            \"lastUpdateDate\": \"2024-06-26T05:30:19.330Z\",\n            \"orderProducts\": [\n                {\n                    \"orderId\": 2,\n                    \"productId\": 3,\n                    \"quantity\": 1,\n                    \"product\": {\n                        \"id\": 3,\n                        \"name\": \"product 3\",\n                        \"description\": \"description 3\",\n                        \"price\": 3,\n                        \"availableStock\": 3\n                    }\n                },\n                {\n                    \"orderId\": 2,\n                    \"productId\": 4,\n                    \"quantity\": 1,\n                    \"product\": {\n                        \"id\": 4,\n                        \"name\": \"product 4\",\n                        \"description\": \"description 4\",\n                        \"price\": 4,\n                        \"availableStock\": 4\n                    }\n                }\n            ]\n        }\n    ],\n    \"paginationPages\": {\n        \"next\": {\n            \"page\": 3,\n            \"limit\": 1\n        },\n        \"previous\": {\n            \"page\": 1,\n            \"limit\": 1\n        }\n    }\n}"
+				},
+				{
+					"name": "Logged in user is not admin",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/all?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "71"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"47-h/EpFa81/lVAo6LGUK/5wlWP6Ow\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:47:08 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "The user logged in does not have enough privileges to access this route"
+				}
+			]
+		},
+		{
+			"name": "Get Current User Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/by-current-user?page=1&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"by-current-user"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "The Get Current User Orders endpoint allows authenticated users to get a paginated list of every order that they have made.\n\nReceives: a page (number, optional) and limit (number, optional) parameters from the request query.\n\nChecks: validity of pagination parameters, if they fail or were not included they are defaulted to page = 1 & limit = 10."
+			},
+			"response": [
+				{
+					"name": "Successful Get Current User Orders",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-current-user?page=1&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-current-user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "569"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"239-usoWjzST6fkX6+cJxUqiH8mN5xM\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:53:53 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"Your orders have been found successfully\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"userId\": 2,\n            \"orderStatus\": \"Pending\",\n            \"creationDate\": \"2024-06-26T05:30:38.962Z\",\n            \"lastUpdateDate\": \"2024-06-26T05:30:38.960Z\",\n            \"orderProducts\": [\n                {\n                    \"orderId\": 3,\n                    \"productId\": 3,\n                    \"quantity\": 1,\n                    \"product\": {\n                        \"id\": 3,\n                        \"name\": \"product 3\",\n                        \"description\": \"description 3\",\n                        \"price\": 3,\n                        \"availableStock\": 3\n                    }\n                },\n                {\n                    \"orderId\": 3,\n                    \"productId\": 4,\n                    \"quantity\": 1,\n                    \"product\": {\n                        \"id\": 4,\n                        \"name\": \"product 4\",\n                        \"description\": \"description 4\",\n                        \"price\": 4,\n                        \"availableStock\": 4\n                    }\n                }\n            ]\n        }\n    ],\n    \"paginationPages\": {}\n}"
+				},
+				{
+					"name": "No user logged in",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-current-user?page=1&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-current-user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"28-65SaVlucbCeez0YwFq44gLfIu1g\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:55:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "There is no authenticated user logged in"
+				}
+			]
+		},
+		{
+			"name": "Get Order By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/by-id2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"by-id2"
+					]
+				},
+				"description": "The Get Order By Id endpoint allows authenticated users to get an order found by its id if the user made it or if the user has an Admin role, in the example shown the id is 2.\n\nReceives: an order id (number, required) from the request parameters.\n\nChecks: validity of order id parameter, if an order with the id provided exists."
+			},
+			"response": [
+				{
+					"name": "Successful Get Order By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-id2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-id2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "543"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"21f-/9oeRG29WfCNueLVp2NTEZ3VCqI\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:57:25 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The order has been found successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"userId\": 5,\n        \"orderStatus\": \"Pending\",\n        \"creationDate\": \"2024-06-26T05:30:19.331Z\",\n        \"lastUpdateDate\": \"2024-06-26T05:30:19.330Z\",\n        \"orderProducts\": [\n            {\n                \"orderId\": 2,\n                \"productId\": 3,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 3,\n                    \"name\": \"product 3\",\n                    \"description\": \"description 3\",\n                    \"price\": 3,\n                    \"availableStock\": 3\n                }\n            },\n            {\n                \"orderId\": 2,\n                \"productId\": 4,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 4,\n                    \"name\": \"product 4\",\n                    \"description\": \"description 4\",\n                    \"price\": 4,\n                    \"availableStock\": 4\n                }\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "No order made by the user found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-id3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-id3"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "137"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"89-NbhE1eFEHcPysl9dQJAwR9cxrIU\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 06:00:33 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order made by the user was found with the id provided\"\n}"
+				},
+				{
+					"name": "No order found with id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-id15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-id15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "120"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"78-J/XgCGXiG5L2UqkX3mn2fp92iFc\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:58:49 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid order id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-ida",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-ida"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "178"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b2-0CV6pxWIg7K4JKmDphcoewccl14\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:58:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order could be found due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Orders By User Id (Admin Only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/by-user-id5?page=2&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"by-user-id5"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "The Get Orders By User Id endpoint allows admin users to get all orders made by a user found by its user id, in the example shown the id is 2.\n\nReceives: an order id (number, required) from the request parameters, a page (number, optional) and limit (number, optional) parameters from the request query.\n\nChecks: validity of order id parameter, if a user with the id provided exists, validity of pagination parameters, if they fail or were not included they are defaulted to page = 1 & limit = 10."
+			},
+			"response": [
+				{
+					"name": "Successful Get Orders By User Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-user-id5?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-user-id5"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "616"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"268-ASyVMlNRK3mtD0Sk339RfzsoNXc\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 06:03:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The orders made by the user have been found successfully\",\n    \"data\": [\n        {\n            \"id\": 2,\n            \"userId\": 5,\n            \"orderStatus\": \"Pending\",\n            \"creationDate\": \"2024-06-26T05:30:19.331Z\",\n            \"lastUpdateDate\": \"2024-06-26T05:30:19.330Z\",\n            \"orderProducts\": [\n                {\n                    \"orderId\": 2,\n                    \"productId\": 3,\n                    \"quantity\": 1,\n                    \"product\": {\n                        \"id\": 3,\n                        \"name\": \"product 3\",\n                        \"description\": \"description 3\",\n                        \"price\": 3,\n                        \"availableStock\": 3\n                    }\n                },\n                {\n                    \"orderId\": 2,\n                    \"productId\": 4,\n                    \"quantity\": 1,\n                    \"product\": {\n                        \"id\": 4,\n                        \"name\": \"product 4\",\n                        \"description\": \"description 4\",\n                        \"price\": 4,\n                        \"availableStock\": 4\n                    }\n                }\n            ]\n        }\n    ],\n    \"paginationPages\": {\n        \"previous\": {\n            \"page\": 1,\n            \"limit\": 1\n        }\n    }\n}"
+				},
+				{
+					"name": "No user was found with id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-user-id15?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-user-id15"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"77-h9PNpA917ynY4p5w9Wsmj4rZjHw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 06:07:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid user id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order/by-user-ida?page=2&limit=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"by-user-ida"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "179"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b3-C06s8ztmQZEqcR3Gg4vyPYSAcn4\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 06:03:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No orders could be found due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"orderProducts\": \r\n    [\r\n        {\r\n        \"productId\": 4,\r\n        \"quantity\": 1\r\n        },\r\n        {\r\n        \"productId\": 3,\r\n        \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/order/create",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"create"
+					]
+				},
+				"description": "The Create Order endpoint allows authenticated users to create a new order.\n\nReceives: a body with a valid array containing order products, order products are an object with the attributes productID ( number, required ) and quantity ( number, required ).\n\nChecks: validity of body, that no order product is repeated, that there is enough available stock to fulfill the order and that a product exists for each product id."
+			},
+			"response": [
+				{
+					"name": "Successful Create Order",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"orderProducts\": \r\n    [\r\n        {\r\n        \"productId\": 4,\r\n        \"quantity\": 1\r\n        },\r\n        {\r\n        \"productId\": 3,\r\n        \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/order/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"create"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "553"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"229-7UytcyYy1ikOZkAcw3QGek1dtSM\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 05:30:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 201,\n    \"statusMessage\": \"Created\",\n    \"isErrorMessage\": false,\n    \"message\": \"The order has been created successfully\",\n    \"data\": {\n        \"id\": 10,\n        \"userId\": 2,\n        \"orderStatus\": \"Pending\",\n        \"creationDate\": \"2024-06-26T05:30:38.962Z\",\n        \"lastUpdateDate\": \"2024-06-26T05:30:38.960Z\",\n        \"orderProducts\": [\n            {\n                \"orderId\": 10,\n                \"productId\": 3,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 3,\n                    \"name\": \"product 3\",\n                    \"description\": \"description 3\",\n                    \"price\": 3,\n                    \"availableStock\": 0\n                }\n            },\n            {\n                \"orderId\": 10,\n                \"productId\": 4,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 4,\n                    \"name\": \"product 4\",\n                    \"description\": \"description 4\",\n                    \"price\": 4,\n                    \"availableStock\": 1\n                }\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "Repeated order product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"orderProducts\": \r\n    [\r\n        {\r\n        \"productId\": 4,\r\n        \"quantity\": 1\r\n        },\r\n        {\r\n        \"productId\": 4,\r\n        \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/order/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"create"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "232"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e8-XM8dyGXYFb/hVP/4k2wSO4iRapY\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 22:44:05 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The product(s) with the following id(s) were included multiple times in the same order: 4. To purchase more than one of a product update the quantity\"\n}"
+				},
+				{
+					"name": "Not enough available stock for product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"orderProducts\": \r\n    [\r\n        {\r\n        \"productId\": 4,\r\n        \"quantity\": 15\r\n        },\r\n        {\r\n        \"productId\": 3,\r\n        \"quantity\": 15\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/order/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"create"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "347"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"15b-n5JTmTRJUaG21fkrXG4uLzhv9H0\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 22:50:18 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The following product(s) do not have enough available stock to fulfill the order:\",\n    \"data\": [\n        {\n            \"id\": 3,\n            \"name\": \"product 3\",\n            \"description\": \"description 3\",\n            \"price\": 3,\n            \"availableStock\": 3\n        },\n        {\n            \"id\": 4,\n            \"name\": \"product 4\",\n            \"description\": \"description 4\",\n            \"price\": 4,\n            \"availableStock\": 4\n        }\n    ]\n}"
+				},
+				{
+					"name": "No product(s) found with id",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"orderProducts\": \r\n    [\r\n        {\r\n        \"productId\": 4,\r\n        \"quantity\": 1\r\n        },\r\n        {\r\n        \"productId\": 3,\r\n        \"quantity\": 1\r\n        },\r\n        {\r\n        \"productId\": 15,\r\n        \"quantity\": 1\r\n        },\r\n        {\r\n        \"productId\": 16,\r\n        \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/order/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"create"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "147"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"93-uFvpgZEtOjxCiDYTcnEwfOIk82s\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 22:59:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"The product(s) with the following id(s) could not be found: 15, 16\"\n}"
+				},
+				{
+					"name": "Invalid order products",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"orderProducts\": \r\n    [\r\n        {\r\n        \"productId\": 0,\r\n        \"quantity\": 0\r\n        },\r\n        {\r\n        \"productId\": 0,\r\n        \"quantity\": 0\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/order/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"create"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "249"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"f9-JN7gwFBEhVIOHb+0/xwKkG2xb5s\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 22:42:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order could be created due to the following validation errors: a productId must be greater than or equal to 1, a quantity number must be greater than or equal to 1\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Cancel Order",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/cancel1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"cancel1"
+					]
+				},
+				"description": "The Cancel Order endpoint allows authenticated users to cancel an order found by its id if the user made it or if the user has an Admin role, in the example shown the id is 1.\n\nReceives: an order id (number, required) from the request parameters.\n\nChecks: validity of order id parameter, if an order with the id provided exists, if the order is not already canceled or has already been shipped or delivered, if the user that is cancelling the order created it or has an Admin role."
+			},
+			"response": [
+				{
+					"name": "Successful Cancel Order",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancel1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancel1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "547"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"223-kH4ygboKMHUjdyWfs5B85dJJvIQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:08:16 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The order has been canceled successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"userId\": 5,\n        \"orderStatus\": \"Canceled\",\n        \"creationDate\": \"2024-06-26T05:30:16.613Z\",\n        \"lastUpdateDate\": \"2024-06-26T23:08:16.850Z\",\n        \"orderProducts\": [\n            {\n                \"orderId\": 1,\n                \"productId\": 3,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 3,\n                    \"name\": \"product 3\",\n                    \"description\": \"description 3\",\n                    \"price\": 3,\n                    \"availableStock\": 3\n                }\n            },\n            {\n                \"orderId\": 1,\n                \"productId\": 4,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 4,\n                    \"name\": \"product 4\",\n                    \"description\": \"description 4\",\n                    \"price\": 4,\n                    \"availableStock\": 4\n                }\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "Order already canceled",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancel1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancel1"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "139"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"8b-zor9f+A/EOIUQkItPimPeH5EHmo\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:10:15 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The order found with the id provided is already canceled\"\n}"
+				},
+				{
+					"name": "Order has been shipped",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancel3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancel3"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "169"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"a9-jOuoGOr9ijgcRY6jj/VWI6G+Hf0\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:12:20 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The order found with the id provided cannot be canceled because it was already shipped\"\n}"
+				},
+				{
+					"name": "Order has been delivered",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancel4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancel4"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "171"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ab-YUhjMxPxDueKxS4HxWLqsyf0WDE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:13:22 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The order found with the id provided cannot be canceled because it was already delivered\"\n}"
+				},
+				{
+					"name": "Order not made by the NonAdmin user",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancel3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancel3"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "137"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"89-NbhE1eFEHcPysl9dQJAwR9cxrIU\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:15:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order made by the user was found with the id provided\"\n}"
+				},
+				{
+					"name": "No order found with id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancel15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancel15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "120"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"78-J/XgCGXiG5L2UqkX3mn2fp92iFc\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:16:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid order id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/cancela",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"cancela"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "181"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b5-pae9z1azbVClq3caAejh0wUJQyg\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:09:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order could be canceled due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Advance Order Status (Admin Only)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/advance-status2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"advance-status2"
+					]
+				},
+				"description": "The Advance Order Status endpoint allows admin users to advance an order's status when its found by its order id, in the example shown the id is 2.\n\nReceives: an order id (number, required) from the request parameters.\n\nChecks: validity of order id parameter, if an order with the id provided exists, if the order is not already completed (delivered or canceled)."
+			},
+			"response": [
+				{
+					"name": "Successful Advance Order Status",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/advance-status2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"advance-status2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "556"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"22c-w7csmhzKpyV9NSS6+ssAKVwKqJc\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:23:04 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The order status has been advanced successfully\",\n    \"data\": {\n        \"id\": 2,\n        \"userId\": 5,\n        \"orderStatus\": \"Processing\",\n        \"creationDate\": \"2024-06-26T05:30:19.331Z\",\n        \"lastUpdateDate\": \"2024-06-26T23:23:04.253Z\",\n        \"orderProducts\": [\n            {\n                \"orderId\": 2,\n                \"productId\": 3,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 3,\n                    \"name\": \"product 3\",\n                    \"description\": \"description 3\",\n                    \"price\": 3,\n                    \"availableStock\": 4\n                }\n            },\n            {\n                \"orderId\": 2,\n                \"productId\": 4,\n                \"quantity\": 1,\n                \"product\": {\n                    \"id\": 4,\n                    \"name\": \"product 4\",\n                    \"description\": \"description 4\",\n                    \"price\": 4,\n                    \"availableStock\": 5\n                }\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "Order is already completed",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/advance-status4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"advance-status4"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "225"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"e1-bRSgSOJL2nE7gy+Qsh8aE8dcvzE\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:47:23 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The order status cannot be advanced because the order is completed, only orders with the pending, processing or shipped status can be advanced\"\n}"
+				},
+				{
+					"name": "No order found with id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/advance-status15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"advance-status15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "120"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"78-J/XgCGXiG5L2UqkX3mn2fp92iFc\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:45:28 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order was found with the id provided\"\n}"
+				},
+				{
+					"name": "Invalid order id",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/advance-statusa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"advance-statusa"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "193"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"c1-ZlCwAIc81JYbUHv2Lnq9OfBPpLw\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 23:33:00 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The order status could not be advanced due to the following validation errors: the id provided is not a number\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Order (Admin Only)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/order/delete4",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"delete4"
+					]
+				},
+				"description": "The Delete Order endpoint allows admin users to delete an order found by its id, in the example shown the id is 4.\n\nReceives: an order id (number, required) from the request parameters.\n\nChecks: validity of order id parameter, if an order with the id provided exists, if the order is still ongoing (not delivered or canceled)."
+			},
+			"response": [
+				{
+					"name": "Successful Delete Order",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/delete4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"delete4"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "114"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"72-bhiJVidXKed7pruzHodXkpQl/HE\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 27 Jun 2024 00:01:43 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The order has been deleted successfully\"\n}"
+				},
+				{
+					"name": "Invalid order id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/deletea",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"deletea"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "180"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"b4-cFDf55gmowpBunlPn6O7nIeYXh8\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 27 Jun 2024 00:10:30 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order could be deleted due to the following validation errors: the id provided is not a number\"\n}"
+				},
+				{
+					"name": "No order found with id",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/delete15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"delete15"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "120"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"78-J/XgCGXiG5L2UqkX3mn2fp92iFc\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 27 Jun 2024 00:10:58 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No order was found with the id provided\"\n}"
+				},
+				{
+					"name": "Order is still ongoing",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/order/delete2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"order",
+								"delete2"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "188"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"bc-Ux0WKHB1MR0hEtXqbTp/nKbnGpU\""
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 27 Jun 2024 00:11:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The order cannot be deleted because it is still ongoing, only delivered or canceled orders can be deleted\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

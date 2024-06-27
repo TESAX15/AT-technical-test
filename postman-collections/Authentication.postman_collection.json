@@ -1,0 +1,795 @@
+{
+	"info": {
+		"_postman_id": "ded29663-1716-4b77-9b30-5122a00f3c5d",
+		"name": "Authentication",
+		"description": "# This collection documents the endpoints of the user authentication features\n\nThe features included are:\n\n- Sign Up: a feature to sign up new users to the API.\n    \n- Login: a feature that allows existing users to log in.\n    \n- Log Out: a feature to log out the currently logged in user.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21428321"
+	},
+	"item": [
+		{
+			"name": "Sign Up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"user.signup.test@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/authentication/sign-up",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"authentication",
+						"sign-up"
+					]
+				},
+				"description": "The Sign Up endpoint allows the creation of new users.\n\nReceives: a body with a valid email (string, required) and password (string, required).\n\nChecks: validity of body, that no other user already exists with the provided email."
+			},
+			"response": [
+				{
+					"name": "Successful Sign Up",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user.signup.test@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/sign-up",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"sign-up"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "171"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"ab-kKpxCNzSnPvI0fRmypcWo+qCZG4\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:16:06 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 201,\n    \"statusMessage\": \"Created\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has been signed up correctly\",\n    \"data\": {\n        \"id\": 10,\n        \"email\": \"user.signup.test@gmail.com\"\n    }\n}"
+				},
+				{
+					"name": "Email used by another user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/sign-up",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"sign-up"
+							]
+						}
+					},
+					"status": "Conflict",
+					"code": 409,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "117"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"75-Ei2NT2hRhrWsYyhPQ0WVsSbTT1g\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:17:16 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 409,\n    \"statusMessage\": \"Conflict\",\n    \"isErrorMessage\": true,\n    \"message\": \"A user already exists with this email\"\n}"
+				},
+				{
+					"name": "Invalid email and password",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/sign-up",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"sign-up"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "235"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"eb-OTxfmPqhn/ScESUND1zpZQQZ3eU\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:18:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be signed up due to the following validation errors: the email provided is invalid, the password should be at least 8 characters long\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/authentication/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"authentication",
+						"login"
+					]
+				},
+				"description": "The Login endpoint allows users to log in. It saves a JWT authentication token to the cookies, so that it can be verified afterwards to get the data of the logged in user.\n\nReceives: a body with a valid email (string, required) and password (string, required).\n\nChecks: validity of body, that no other user is already logged in, that a user with the email provided exists and is not blocked, and that the password matches the passwordHash on the DB."
+			},
+			"response": [
+				{
+					"name": "Successful Login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhZG1pbi51c2VyQGdtYWlsLmNvbSIsInVzZXJSb2xlIjoiQWRtaW4iLCJpYXQiOjE3MTkzNjE2NDQsImV4cCI6MTcxOTQwNDg0NH0.zLpKj-XSaYQDapTPrLER07kG5oww9v4acAWcQH9D8B8; Domain=localhost; Path=/; HttpOnly"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "324"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"144-2T089PPOiI1FZ4K1X+2wvAet6PY\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:27:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has successfully logged in\",\n    \"data\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJhZG1pbi51c2VyQGdtYWlsLmNvbSIsInVzZXJSb2xlIjoiQWRtaW4iLCJpYXQiOjE3MTkzNjE2NDQsImV4cCI6MTcxOTQwNDg0NH0.zLpKj-XSaYQDapTPrLER07kG5oww9v4acAWcQH9D8B8\"\n}"
+				},
+				{
+					"name": "A user is already logged in",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "111"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"6f-t/QZEpaF1mnxTpAxGk6OhxgiuTA\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:57:02 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 401,\n    \"statusMessage\": \"Unauthorized\",\n    \"isErrorMessage\": true,\n    \"message\": \"A user is already logged in\"\n}"
+				},
+				{
+					"name": "User does not exist",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"nonexistent.user@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "122"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"7a-phvhhQ3atqwBc1qehvqewIWiJ/g\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:52:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"No user with the email provided was found\"\n}"
+				},
+				{
+					"name": "User is blocked",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"blocked.user@gmail.com\",\r\n    \"password\": \"contra123.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "103"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"67-NzzNl4Vwvl+ytbxdX0WeToLiheY\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:48:51 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 401,\n    \"statusMessage\": \"Unauthorized\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user is blocked\"\n}"
+				},
+				{
+					"name": "Incorrect password",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin.user@gmail.com\",\r\n    \"password\": \"incorrectPassword.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "128"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"80-rYCJvq+ceII5hW36TmkAc4RqoL8\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:54:39 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 401,\n    \"statusMessage\": \"Unauthorized\",\n    \"isErrorMessage\": true,\n    \"message\": \"The email and password provided do not match\"\n}"
+				},
+				{
+					"name": "Invalid email and password",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/authentication/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "235"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"eb-OTxfmPqhn/ScESUND1zpZQQZ3eU\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:55:13 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 400,\n    \"statusMessage\": \"Bad Request\",\n    \"isErrorMessage\": true,\n    \"message\": \"The user could not be signed up due to the following validation errors: the email provided is invalid, the password should be at least 8 characters long\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Log Out",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/authentication/logout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"authentication",
+						"logout"
+					]
+				},
+				"description": "The Log Out endpoint allows the currently logged in users to log out. It clears the JWT authentication token saved in the Login endpoint.\n\nChecks: That a user is already logged in."
+			},
+			"response": [
+				{
+					"name": "Successful Log Out",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/authentication/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"authentication",
+								"logout"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "authToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "111"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"6f-TcIKVldtbJznGeGq4GkV/4it7aU\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:46:32 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 200,\n    \"statusMessage\": \"OK\",\n    \"isErrorMessage\": false,\n    \"message\": \"The user has successfully logged out\"\n}"
+				},
+				{
+					"name": "No user logged in",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/authentication/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"authentication",
+								"logout"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "107"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"6b-54pt3/BzginjhfQzNrsR6avZ5JI\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 00:47:25 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"statusCode\": 404,\n    \"statusMessage\": \"Not Found\",\n    \"isErrorMessage\": true,\n    \"message\": \"There is no user logged in\"\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
