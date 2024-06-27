@@ -4,9 +4,13 @@
   "description": "technical test",
   "main": "app.js",
   "scripts": {
+    "build": "tsc",
     "dev": "nodemon src/app.ts",
     "start": "node build/src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "author": "Tomas Sanchez",
   "license": "ISC",
