@@ -13,7 +13,16 @@ The API has four main feature groups:
 - Order Processing Features: Order List(All, Current User, By Id, By User Id), Create, Cancel, Advance Order Status and Delete
 
 All these features will be detailed further in the API Documentation Section.
-Some business rules that were implemented in the 
+
+Some business rules that were implemented in the API are:
+- A User cannot be deleted if it has made orders before, to maintain the integrity of the information in the Order.
+- A Product cannot be deleted if it has been present in orders before, to maintain the integrity of the information in the Order.
+- The contemplated status for and Order are: 'Pending', 'Processing', 'Shipped', 'Delivered' or 'Canceled'.
+- The contents of an Order cannot be altered, meaning no Order Products should be added to or taken out of the Order.
+- Only an Order that has been completed (meaning it is 'Delivered' or 'Canceled') can be deleted so that no ongoing orders are deleted, however this is discouraged because it deletes the historic order data of a user, because of that it is only available for Admin users.
+- An Order can only be canceled if it is in the 'Pending' or 'Processing' status.
+- If an Order is canceled the stock that was originally destined to be in that Order should be added back to the Product's available stock. 
+- Order status can only be advanced forward following this sequence: 'Pending' --> 'Processing' --> 'Shipped' --> 'Delivered'.
 
 Prerequisites
 ---------
