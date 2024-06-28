@@ -17,7 +17,7 @@ All these features will be detailed further in the API Documentation Section.
 Some business rules that were implemented in the API are:
 - A User cannot be deleted if it has made orders before, to maintain the integrity of the information in the Order.
 - A Product cannot be deleted if it has been present in orders before, to maintain the integrity of the information in the Order.
-- The contemplated status for and Order are: 'Pending', 'Processing', 'Shipped', 'Delivered' or 'Canceled'.
+- The contemplated status for Orders are: 'Pending', 'Processing', 'Shipped', 'Delivered' or 'Canceled'.
 - The contents of an Order cannot be altered, meaning no Order Products should be added to or taken out of the Order.
 - Only an Order that has been completed (meaning it is 'Delivered' or 'Canceled') can be deleted so that no ongoing orders are deleted, however this is discouraged because it deletes the historic order data of a user, because of that it is only available for Admin users.
 - An Order can only be canceled if it is in the 'Pending' or 'Processing' status.
@@ -66,3 +66,8 @@ The example bodies in each collection have data corresponding to the seeding of 
 Each Collection contains an overview of the features included, also they have a variable configured in the 'variables' tab of the collection to indicate the host that it's being run on, by default 'http://localhost:3000' but can be changed to be whatever host the user wants.
 
 For each feature detailed in a collection there is a brief description of what the feature does, what it receives to perform the requests and the checks it does to determine the request response, all possible responses can be seen in the different examples for each feature.
+
+Run the Tests
+--------
+Unit testing was developed for 5 features ( Create Order, Cancel Order, Advance Order Status, Delete Order and Sign Up), this allows for automatic tests to be run on these features ensuring that future changes have to maintain the same business rules that are tested here.
+To run the tests use the `npm run test`
