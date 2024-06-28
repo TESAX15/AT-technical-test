@@ -193,6 +193,17 @@ async function getOrdersByUserId(
     }
 
     const orderCount = await orderRepository.countUserOrders(userId);
+
+    // Checking to see if the user with the id provided has orders
+    if (orderCount < 1) {
+      return {
+        statusCode: 404,
+        statusMessage: 'Not Found',
+        isErrorMessage: true,
+        message: 'No orders made by the user were found'
+      };
+    }
+
     const paginationParams = paginationUtil.validatePaginationParams(page, limit);
     // Calculates the pagination based on the validated parameters
     const orderPages = paginationUtil.calculatePages(
